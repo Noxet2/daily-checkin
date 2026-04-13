@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Daily Check-in</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a7c7e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+    <div id="app">
+
+        <header>
+            <div class="header-left">
+                <h1>Daily Check-in</h1>
+                <div id="streakBadge" class="streak-badge hidden">🔥 <span id="streakCount">0</span></div>
+            </div>
+            <div class="header-right">
+                <button id="statsBtn" class="icon-btn" title="Stats">📊</button>
+                <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- SCREEN: Check-in -->
+            <div id="checkinScreen" class="screen">
+                <div class="card">
+                    <p id="greeting" class="greeting"></p>
+                    <p class="subtext">Takes about 3 minutes. Let's see how you're doing.</p>
+                </div>
+
+                <!-- Step 1: Mood -->
+                <div id="moodStep" class="card step">
+                    <h2>How are you right now?</h2>
+                    <div class="mood-scale">
+                        <div class="mood-buttons" id="moodButtons"></div>
+                        <div class="mood-labels">
+                            <span>Very bad</span>
+                            <span>Okay</span>
+                            <span>Great</span>
+                        </div>
+                    </div>
+                    <p id="moodFeedback" class="mood-feedback"></p>
+                    <button id="moodNextBtn" class="btn btn-primary hidden">Continue →</button>
+                </div>
+
+                <!-- Step 2: Exercise -->
+                <div id="exerciseStep" class="card step hidden">
+                    <div id="exerciseHeader">
+                        <span class="exercise-tag" id="exerciseTag"></span>
+                        <h2 id="exerciseTitle"></h2>
+                        <p id="exerciseDesc" class="subtext"></p>
+                    </div>
+                    <div id="exerciseContent"></div>
+                    <button id="exerciseNextBtn" class="btn btn-primary">Complete →</button>
+                </div>
+
+                <!-- Step 3: Done -->
+                <div id="completionStep" class="card step hidden">
+                    <div class="completion-icon">✓</div>
+                    <h2>Done for today.</h2>
+                    <p class="subtext" id="completionMessage"></p>
+                    <button id="viewStatsBtn" class="btn btn-secondary">View your progress</button>
+                </div>
+            </div>
+
+            <!-- SCREEN: Already done today -->
+            <div id="alreadyDoneScreen" class="screen hidden">
+                <div class="card">
+                    <div class="completion-icon">✓</div>
+                    <h2>You've checked in today.</h2>
+                    <p class="subtext" id="alreadyDoneMessage"></p>
+                </div>
+                <div class="card" id="todaySummaryCard">
+                    <h3>Today's mood</h3>
+                    <div id="todayMoodDisplay" class="mood-display"></div>
+                </div>
+                <button id="goToStatsBtn" class="btn btn-primary">View progress →</button>
+            </div>
+
+            <!-- SCREEN: Stats -->
+            <div id="statsScreen" class="screen hidden">
+                <div class="screen-header">
+                    <button class="back-btn" data-back="home">← Back</button>
+                    <h2>Your Progress</h2>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statStreak">0</div>
+                        <div class="stat-label">Day streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statAvgMood">—</div>
+                        <div class="stat-label">Avg mood (7 days)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotal">0</div>
+                        <div class="stat-label">Total check-ins</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statThisMonth">0</div>
+                        <div class="stat-label">This month</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Mood — last 14 days</h3>
+                    <div id="moodChart" class="mood-chart"></div>
+                    <div class="chart-labels">
+                        <span>1</span><span>5</span><span>10</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Share with your psychologist</h3>
+                    <p class="subtext">Export a summary of your last 30 days.</p>
+                    <button id="exportBtn" class="btn btn-primary">Generate summary</button>
+                    <div id="exportOutput" class="export-output hidden"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN: Settings -->
+            <div id="settingsScreen" class="screen hidden">
+                <div class="screen-header">
+                    <button class="back-btn" data-back="home">← Back</button>
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="card">
+                    <h3>Reminders</h3>
+                    <div class="setting-row">
+                        <label>Morning reminder</label>
+                        <input type="time" id="morningTime" value="08:00">
+                    </div>
+                    <div class="setting-row">
+                        <label>Evening nudge (if not done)</label>
+                        <input type="time" id="eveningTime" value="20:00">
+                    </div>
+                    <button id="enableNotificationsBtn" class="btn btn-primary">Enable notifications</button>
+                    <p id="notificationStatus" class="subtext"></p>
+                </div>
+
+                <div class="card">
+                    <h3>Data</h3>
+                    <button id="clearDataBtn" class="btn btn-danger">Clear all data</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,755 @@
+// ===== SCIENCE-BASED EXERCISES =====
+// Rotating daily exercises based on CBT, ACT, DBT, and behavioral activation research.
+
+const EXERCISES = [
+    {
+        id: 'thought-record',
+        title: 'Thought Record',
+        tag: 'CBT',
+        description: 'Catch a negative thought and challenge it with evidence.',
+        steps: [
+            {
+                prompt: 'Describe the situation briefly.',
+                placeholder: 'What happened, or what are you thinking about right now?',
+                field: 'situation'
+            },
+            {
+                prompt: 'What automatic thought came up?',
+                placeholder: 'The thought that popped into your head...',
+                field: 'thought'
+            },
+            {
+                prompt: 'What evidence is there AGAINST this thought?',
+                placeholder: 'What facts challenge or contradict this thought?',
+                field: 'counter'
+            },
+            {
+                prompt: 'Write a more balanced version of the thought.',
+                placeholder: 'A more realistic perspective, even if you can\'t feel it yet...',
+                field: 'balanced'
+            }
+        ]
+    },
+    {
+        id: 'behavioral-activation',
+        title: 'Behavioral Activation',
+        tag: 'CBT',
+        description: 'Notice what you did today. Action comes before feeling — not after.',
+        steps: [
+            {
+                prompt: 'Name 3 things you did today.',
+                placeholder: 'Even tiny things count. Got dressed. Made coffee. Opened a window.',
+                field: 'activities'
+            },
+            {
+                prompt: 'Did any of them shift how you felt, even slightly?',
+                placeholder: 'Or did everything feel flat? Both are valid answers.',
+                field: 'shift'
+            },
+            {
+                prompt: 'Plan one small action for tomorrow.',
+                placeholder: 'It can be very small — a 5 minute walk, one glass of water, texting someone.',
+                field: 'plan'
+            }
+        ]
+    },
+    {
+        id: 'grounding',
+        title: '5-4-3-2-1 Grounding',
+        tag: 'Mindfulness',
+        description: 'Bring yourself back to the present moment using your senses.',
+        info: 'This exercise works even when you feel numb. You don\'t need to feel anything — just notice.\n\n5 things you can SEE\n4 things you can TOUCH\n3 things you can HEAR\n2 things you can SMELL\n1 thing you can TASTE',
+        steps: [
+            {
+                prompt: 'Name 5 things you can see right now.',
+                placeholder: 'Look around slowly. List what you see.',
+                field: 'see'
+            },
+            {
+                prompt: 'Name 4 things you can physically touch or feel.',
+                placeholder: 'Your chair, your feet on the floor, your clothes...',
+                field: 'touch'
+            },
+            {
+                prompt: 'Name 3 things you can hear.',
+                placeholder: 'Background noise, your breathing, anything...',
+                field: 'hear'
+            },
+            {
+                prompt: 'How do you feel compared to when you started?',
+                placeholder: 'Even a tiny shift? Or the same? Either is fine.',
+                field: 'after'
+            }
+        ]
+    },
+    {
+        id: 'values',
+        title: 'Values Check',
+        tag: 'ACT',
+        description: 'When feelings go quiet, values can still guide you.',
+        info: 'In Acceptance and Commitment Therapy, values are not feelings — they are directions. You can act on a value even when you feel nothing.',
+        steps: [
+            {
+                prompt: 'What is one thing that matters to you — even if you can\'t feel it right now?',
+                placeholder: 'Family, learning, honesty, health, creating something...',
+                field: 'value'
+            },
+            {
+                prompt: 'Did you do anything today that moved toward that value, even slightly?',
+                placeholder: 'Or did today pull you away from it? Both answers are useful.',
+                field: 'action'
+            },
+            {
+                prompt: 'One small thing you could do tomorrow that aligns with this value.',
+                placeholder: 'It doesn\'t have to feel meaningful — just point in the right direction.',
+                field: 'tomorrow'
+            }
+        ]
+    },
+    {
+        id: 'self-compassion',
+        title: 'Self-Compassion',
+        tag: 'CBT',
+        description: 'Treat yourself the way you would treat someone you care about.',
+        info: 'Research shows self-criticism makes depression and emotional blunting worse. Self-compassion is not weakness — it is a clinically validated tool.',
+        steps: [
+            {
+                prompt: 'What is something you\'ve been critical of yourself about lately?',
+                placeholder: 'Something you keep blaming yourself for...',
+                field: 'criticism'
+            },
+            {
+                prompt: 'If a close friend told you this about themselves, what would you say to them?',
+                placeholder: 'Write what you would actually say — not what you "should" say.',
+                field: 'friend'
+            },
+            {
+                prompt: 'Can you say any part of that to yourself? Write it here.',
+                placeholder: 'Even one sentence. It doesn\'t have to feel true yet.',
+                field: 'self'
+            }
+        ]
+    },
+    {
+        id: 'opposite-action',
+        title: 'Opposite Action',
+        tag: 'DBT',
+        description: 'When your instinct is to avoid, do something slightly different.',
+        info: 'From Dialectical Behavior Therapy: when emotions drive avoidance, the avoidance itself keeps the problem alive. Doing even a tiny version of the opposite breaks the cycle — not because it feels good, but because it proves to your brain that you can.',
+        steps: [
+            {
+                prompt: 'What is something you have been avoiding or withdrawing from?',
+                placeholder: 'A person, a task, going outside, something you used to enjoy...',
+                field: 'avoidance'
+            },
+            {
+                prompt: 'What would the very first 2 minutes of doing that thing look like?',
+                placeholder: 'Not the whole thing — just the opening move. What happens in the first moment? Think about YOUR specific situation, not a general answer.',
+                field: 'opposite'
+            },
+            {
+                prompt: 'What would doing it look like if you only had 10% of your normal energy?',
+                placeholder: 'Strip it down until it feels almost too small to matter. That\'s the version to aim for.',
+                field: 'plan'
+            }
+        ]
+    },
+    {
+        id: 'activity-planning',
+        title: 'Pleasant Activity Planning',
+        tag: 'Behavioral',
+        description: 'Schedule something small that you once found enjoyable.',
+        info: 'With emotional blunting, activities may not feel enjoyable — but doing them anyway is what gradually rebuilds the connection. This is called behavioral re-engagement.',
+        steps: [
+            {
+                prompt: 'Name something you used to enjoy before things got hard.',
+                placeholder: 'A walk, music, cooking, reading, talking to someone...',
+                field: 'activity'
+            },
+            {
+                prompt: 'On a scale of 0-10, how motivated do you feel to do it right now?',
+                placeholder: 'Be honest. 0 is fine.',
+                field: 'motivation'
+            },
+            {
+                prompt: 'Schedule a small version of it. When exactly?',
+                placeholder: 'Tomorrow at 3pm. Friday morning. Tonight before bed.',
+                field: 'schedule'
+            }
+        ]
+    }
+];
+
+// ===== MOOD FEEDBACK =====
+const MOOD_FEEDBACK = {
+    1: "That sounds really hard. I\'m glad you\'re here.",
+    2: "That sounds really hard. I\'m glad you\'re here.",
+    3: "Not a good day. That\'s okay. You still showed up.",
+    4: "Rough. Let\'s do something small together.",
+    5: "In the middle. That\'s honest.",
+    6: "A bit better than average. Let\'s build on that.",
+    7: "That\'s a decent day. Let\'s use it.",
+    8: "Pretty good. Let\'s reinforce what\'s working.",
+    9: "Really good. Take note of what\'s different today.",
+    10: "Excellent. Remember this feeling — it exists."
+};
+
+// ===== LOCAL STORAGE KEYS =====
+const STORAGE_KEY = 'dailycheckin_data';
+const SETTINGS_KEY = 'dailycheckin_settings';
+
+// ===== APP STATE =====
+let selectedMood = null;
+let currentExerciseIndex = 0;
+let currentStepIndex = 0;
+let exerciseAnswers = {};
+let todayExercise = null;
+
+// ===== DATA FUNCTIONS =====
+
+function getData() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { entries: [] };
+    } catch {
+        return { entries: [] };
+    }
+}
+
+function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getSettings() {
+    try {
+        return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {
+            morningTime: '08:00',
+            eveningTime: '20:00',
+            notificationsEnabled: false
+        };
+    } catch {
+        return { morningTime: '08:00', eveningTime: '20:00', notificationsEnabled: false };
+    }
+}
+
+function saveSettings(settings) {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function getTodayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
+function getTodayEntry() {
+    const data = getData();
+    return data.entries.find(e => e.date === getTodayKey()) || null;
+}
+
+function saveEntry(mood, exercise, answers) {
+    const data = getData();
+    const entry = {
+        date: getTodayKey(),
+        mood: mood,
+        exercise: exercise.id,
+        answers: answers,
+        timestamp: Date.now()
+    };
+    const existingIndex = data.entries.findIndex(e => e.date === getTodayKey());
+    if (existingIndex >= 0) {
+        data.entries[existingIndex] = entry;
+    } else {
+        data.entries.push(entry);
+    }
+    saveData(data);
+    return entry;
+}
+
+function getStreak() {
+    const data = getData();
+    if (data.entries.length === 0) return 0;
+
+    const sorted = [...data.entries].sort((a, b) => b.date.localeCompare(a.date));
+    const today = getTodayKey();
+    const yesterday = getDateKey(-1);
+
+    // Must have checked in today or yesterday to have an active streak
+    if (sorted[0].date !== today && sorted[0].date !== yesterday) return 0;
+
+    let streak = 0;
+    let checkDate = sorted[0].date === today ? today : yesterday;
+
+    for (let i = 0; i < sorted.length; i++) {
+        if (sorted[i].date === checkDate) {
+            streak++;
+            checkDate = getDateKey(-streak);
+        } else {
+            break;
+        }
+    }
+    return streak;
+}
+
+function getDateKey(offset) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getRecentEntries(days) {
+    const data = getData();
+    const cutoff = getDateKey(-days);
+    return data.entries.filter(e => e.date >= cutoff);
+}
+
+function getAverageMood(days) {
+    const entries = getRecentEntries(days);
+    if (entries.length === 0) return null;
+    return (entries.reduce((sum, e) => sum + e.mood, 0) / entries.length).toFixed(1);
+}
+
+// ===== EXERCISE SELECTION =====
+// Pick exercise based on day of year so it's consistent all day but rotates daily
+
+function getTodayExercise() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    return EXERCISES[dayOfYear % EXERCISES.length];
+}
+
+// ===== GREETING =====
+
+function getGreeting() {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning.';
+    if (hour < 17) return 'Good afternoon.';
+    return 'Good evening.';
+}
+
+// ===== UI FUNCTIONS =====
+
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(screenId).classList.remove('hidden');
+}
+
+function buildMoodButtons() {
+    const container = document.getElementById('moodButtons');
+    container.innerHTML = '';
+    for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'mood-btn';
+        btn.textContent = i;
+        btn.addEventListener('click', () => selectMood(i));
+        container.appendChild(btn);
+    }
+}
+
+function selectMood(value) {
+    selectedMood = value;
+    document.querySelectorAll('.mood-btn').forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx + 1 === value);
+    });
+    document.getElementById('moodFeedback').textContent = MOOD_FEEDBACK[value] || '';
+    document.getElementById('moodNextBtn').classList.remove('hidden');
+}
+
+function buildExerciseStep() {
+    const exercise = todayExercise;
+    const step = exercise.steps[currentStepIndex];
+
+    document.getElementById('exerciseTag').textContent = exercise.tag;
+    document.getElementById('exerciseTitle').textContent = exercise.title;
+    document.getElementById('exerciseDesc').textContent = exercise.description;
+
+    const content = document.getElementById('exerciseContent');
+    content.innerHTML = '';
+
+    // Show info box on first step if exercise has one
+    if (currentStepIndex === 0 && exercise.info) {
+        const infoBox = document.createElement('div');
+        infoBox.className = 'exercise-info-box';
+        infoBox.textContent = exercise.info;
+        content.appendChild(infoBox);
+    }
+
+    // Step indicator
+    const indicator = document.createElement('p');
+    indicator.className = 'exercise-step-indicator';
+    indicator.textContent = `Step ${currentStepIndex + 1} of ${exercise.steps.length}`;
+    content.appendChild(indicator);
+
+    // Prompt
+    const prompt = document.createElement('p');
+    prompt.className = 'exercise-prompt';
+    prompt.textContent = step.prompt;
+    content.appendChild(prompt);
+
+    // Textarea
+    const textarea = document.createElement('textarea');
+    textarea.className = 'exercise-textarea';
+    textarea.placeholder = step.placeholder;
+    textarea.id = 'exerciseInput';
+    textarea.value = exerciseAnswers[step.field] || '';
+    content.appendChild(textarea);
+
+    // Update button text
+    const nextBtn = document.getElementById('exerciseNextBtn');
+    const isLast = currentStepIndex === exercise.steps.length - 1;
+    nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
+}
+
+function advanceExerciseStep() {
+    const step = todayExercise.steps[currentStepIndex];
+    const input = document.getElementById('exerciseInput');
+    exerciseAnswers[step.field] = input.value.trim();
+
+    const isLast = currentStepIndex === todayExercise.steps.length - 1;
+
+    if (isLast) {
+        // Save and complete
+        const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
+        showCompletion(entry);
+    } else {
+        currentStepIndex++;
+        buildExerciseStep();
+    }
+}
+
+function showCompletion(entry) {
+    document.getElementById('moodStep').classList.add('hidden');
+    document.getElementById('exerciseStep').classList.add('hidden');
+    document.getElementById('completionStep').classList.remove('hidden');
+
+    const streak = getStreak();
+    let message = 'You showed up today. That matters.';
+    if (streak >= 7) message = `${streak} days in a row. Keep going.`;
+    else if (streak >= 3) message = `${streak} days in a row. You\'re building something real.`;
+    else if (streak >= 2) message = `2 days in a row. That\'s a start.`;
+
+    document.getElementById('completionMessage').textContent = message;
+    updateStreakBadge();
+}
+
+function updateStreakBadge() {
+    const streak = getStreak();
+    const badge = document.getElementById('streakBadge');
+    const count = document.getElementById('streakCount');
+    if (streak >= 2) {
+        count.textContent = streak;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+function buildStatsScreen() {
+    const streak = getStreak();
+    const avg7 = getAverageMood(7);
+    const data = getData();
+    const total = data.entries.length;
+    const now = new Date();
+    const thisMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const thisMonth = data.entries.filter(e => e.date.startsWith(thisMonthKey)).length;
+
+    document.getElementById('statStreak').textContent = streak;
+    document.getElementById('statAvgMood').textContent = avg7 || '—';
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statThisMonth').textContent = thisMonth;
+
+    buildMoodChart();
+}
+
+function buildMoodChart() {
+    const chart = document.getElementById('moodChart');
+    chart.innerHTML = '';
+
+    const days = 14;
+    let hasData = false;
+
+    for (let i = days - 1; i >= 0; i--) {
+        const dateKey = getDateKey(-i);
+        const data = getData();
+        const entry = data.entries.find(e => e.date === dateKey);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'chart-bar-wrap';
+
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar';
+
+        if (entry) {
+            hasData = true;
+            const pct = (entry.mood / 10) * 100;
+            bar.style.height = `${pct}%`;
+            if (entry.mood >= 7) bar.classList.add('high');
+            else if (entry.mood >= 4) bar.classList.add('mid');
+            else bar.classList.add('low');
+            bar.title = `${dateKey}: ${entry.mood}/10`;
+        } else {
+            bar.style.height = '4px';
+            bar.style.opacity = '0.2';
+        }
+
+        const label = document.createElement('span');
+        label.className = 'chart-day';
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        label.textContent = d.getDate();
+
+        wrap.appendChild(bar);
+        wrap.appendChild(label);
+        chart.appendChild(wrap);
+    }
+
+    if (!hasData) {
+        chart.innerHTML = '<p class="chart-empty">No data yet. Start checking in daily.</p>';
+    }
+}
+
+function generateExportSummary() {
+    const data = getData();
+    const now = new Date();
+    const thirtyDaysAgo = getDateKey(-30);
+    const recent = data.entries.filter(e => e.date >= thirtyDaysAgo).sort((a, b) => a.date.localeCompare(b.date));
+
+    if (recent.length === 0) {
+        return 'No check-ins in the last 30 days.';
+    }
+
+    const avgMood = (recent.reduce((sum, e) => sum + e.mood, 0) / recent.length).toFixed(1);
+    const streak = getStreak();
+    const highDays = recent.filter(e => e.mood >= 7).length;
+    const lowDays = recent.filter(e => e.mood <= 3).length;
+
+    const exerciseCounts = {};
+    recent.forEach(e => {
+        exerciseCounts[e.exercise] = (exerciseCounts[e.exercise] || 0) + 1;
+    });
+
+    let summary = `DAILY CHECK-IN SUMMARY\n`;
+    summary += `Generated: ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
+    summary += `Period: Last 30 days\n\n`;
+    summary += `--- OVERVIEW ---\n`;
+    summary += `Total check-ins: ${recent.length} / 30 days\n`;
+    summary += `Average mood: ${avgMood} / 10\n`;
+    summary += `Good days (7+): ${highDays}\n`;
+    summary += `Difficult days (1-3): ${lowDays}\n`;
+    summary += `Current streak: ${streak} days\n\n`;
+    summary += `--- MOOD BY DAY ---\n`;
+    recent.forEach(e => {
+        const bar = '█'.repeat(e.mood) + '░'.repeat(10 - e.mood);
+        summary += `${e.date}  ${bar}  ${e.mood}/10\n`;
+    });
+    summary += `\n--- EXERCISES COMPLETED ---\n`;
+    Object.entries(exerciseCounts).forEach(([id, count]) => {
+        const ex = EXERCISES.find(e => e.id === id);
+        summary += `${ex ? ex.title : id}: ${count}x\n`;
+    });
+
+    return summary;
+}
+
+// ===== NOTIFICATIONS =====
+
+async function requestNotifications() {
+    if (!('Notification' in window)) {
+        document.getElementById('notificationStatus').textContent = 'Your browser does not support notifications.';
+        return;
+    }
+
+    const permission = await Notification.requestPermission();
+    const settings = getSettings();
+    settings.notificationsEnabled = permission === 'granted';
+    saveSettings(settings);
+
+    if (permission === 'granted') {
+        document.getElementById('notificationStatus').textContent = 'Notifications enabled. You\'ll be reminded daily.';
+        scheduleNotificationCheck();
+    } else {
+        document.getElementById('notificationStatus').textContent = 'Permission denied. You can enable it in your browser settings.';
+    }
+}
+
+function scheduleNotificationCheck() {
+    const settings = getSettings();
+    if (!settings.notificationsEnabled) return;
+
+    const now = new Date();
+    const todayEntry = getTodayEntry();
+
+    const [mH, mM] = settings.morningTime.split(':').map(Number);
+    const [eH, eM] = settings.eveningTime.split(':').map(Number);
+
+    const morningTime = new Date();
+    morningTime.setHours(mH, mM, 0, 0);
+
+    const eveningTime = new Date();
+    eveningTime.setHours(eH, eM, 0, 0);
+
+    // Morning reminder
+    if (now < morningTime) {
+        const msUntilMorning = morningTime - now;
+        setTimeout(() => {
+            if (!getTodayEntry()) {
+                new Notification('Daily Check-in', {
+                    body: 'Good morning. Time for your daily 3-minute check-in.',
+                    icon: '/icon.png'
+                });
+            }
+        }, msUntilMorning);
+    }
+
+    // Evening nudge if not done
+    if (now < eveningTime) {
+        const msUntilEvening = eveningTime - now;
+        setTimeout(() => {
+            if (!getTodayEntry()) {
+                new Notification('Daily Check-in', {
+                    body: 'You haven\'t checked in today yet. It only takes 3 minutes.',
+                    icon: '/icon.png'
+                });
+            }
+        }, msUntilEvening);
+    }
+}
+
+// ===== INIT =====
+
+function init() {
+    buildMoodButtons();
+    updateStreakBadge();
+
+    document.getElementById('greeting').textContent = getGreeting();
+
+    todayExercise = getTodayExercise();
+
+    // Check if already done today
+    const todayEntry = getTodayEntry();
+    if (todayEntry) {
+        showAlreadyDone(todayEntry);
+    } else {
+        showScreen('checkinScreen');
+    }
+
+    // Load settings
+    const settings = getSettings();
+    document.getElementById('morningTime').value = settings.morningTime;
+    document.getElementById('eveningTime').value = settings.eveningTime;
+
+    if (settings.notificationsEnabled && Notification.permission === 'granted') {
+        document.getElementById('notificationStatus').textContent = 'Notifications are enabled.';
+        scheduleNotificationCheck();
+    }
+
+    // ===== EVENT LISTENERS =====
+
+    // Mood next
+    document.getElementById('moodNextBtn').addEventListener('click', () => {
+        document.getElementById('moodStep').classList.add('hidden');
+        document.getElementById('exerciseStep').classList.remove('hidden');
+        currentStepIndex = 0;
+        exerciseAnswers = {};
+        buildExerciseStep();
+    });
+
+    // Exercise next/complete
+    document.getElementById('exerciseNextBtn').addEventListener('click', () => {
+        advanceExerciseStep();
+    });
+
+    // View stats from completion
+    document.getElementById('viewStatsBtn').addEventListener('click', () => {
+        buildStatsScreen();
+        showScreen('statsScreen');
+    });
+
+    // View stats from already-done screen
+    document.getElementById('goToStatsBtn').addEventListener('click', () => {
+        buildStatsScreen();
+        showScreen('statsScreen');
+    });
+
+    // Header buttons
+    document.getElementById('statsBtn').addEventListener('click', () => {
+        buildStatsScreen();
+        showScreen('statsScreen');
+    });
+
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        showScreen('settingsScreen');
+    });
+
+    // Back buttons
+    document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const todayEntry = getTodayEntry();
+            if (todayEntry) {
+                showAlreadyDone(todayEntry);
+            } else {
+                showScreen('checkinScreen');
+            }
+        });
+    });
+
+    // Notifications
+    document.getElementById('enableNotificationsBtn').addEventListener('click', () => {
+        requestNotifications();
+    });
+
+    // Settings save on change
+    document.getElementById('morningTime').addEventListener('change', saveCurrentSettings);
+    document.getElementById('eveningTime').addEventListener('change', saveCurrentSettings);
+
+    // Export
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        const summary = generateExportSummary();
+        const output = document.getElementById('exportOutput');
+        output.textContent = summary;
+        output.classList.remove('hidden');
+
+        // Add copy button if not there
+        if (!document.getElementById('copyBtn')) {
+            const copyBtn = document.createElement('button');
+            copyBtn.id = 'copyBtn';
+            copyBtn.className = 'btn btn-secondary copy-btn';
+            copyBtn.textContent = 'Copy to clipboard';
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(summary).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyBtn.textContent = 'Copy to clipboard'; }, 2000);
+                });
+            });
+            output.after(copyBtn);
+        }
+    });
+
+    // Clear data
+    document.getElementById('clearDataBtn').addEventListener('click', () => {
+        if (confirm('Are you sure? This will delete all your check-in history.')) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+    });
+}
+
+function showAlreadyDone(entry) {
+    showScreen('alreadyDoneScreen');
+    const hour = new Date().getHours();
+    let msg = 'Come back tomorrow.';
+    if (hour < 17) msg = 'Rest of the day is yours.';
+    document.getElementById('alreadyDoneMessage').textContent = msg;
+    document.getElementById('todayMoodDisplay').textContent = `${entry.mood} / 10`;
+    updateStreakBadge();
+}
+
+function saveCurrentSettings() {
+    const settings = getSettings();
+    settings.morningTime = document.getElementById('morningTime').value;
+    settings.eveningTime = document.getElementById('eveningTime').value;
+    saveSettings(settings);
+}
+
+// Start the app
+document.addEventListener('DOMContentLoaded', init);
