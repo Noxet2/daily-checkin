@@ -194,6 +194,34 @@ const MOOD_FEEDBACK = {
     10: "Excellent. Remember this feeling — it exists."
 };
 
+// ===== COMMITMENT FIELDS =====
+// Which field in each exercise contains tomorrow's commitment
+const COMMITMENT_FIELDS = {
+    'behavioral-activation': 'plan',
+    'opposite-action': 'plan',
+    'activity-planning': 'schedule',
+    'values': 'tomorrow'
+};
+
+// ===== FOLLOW-UP RESPONSES =====
+const FOLLOWUP_RESPONSES = {
+    yes: [
+        "You did it. Acting against low motivation is one of the hardest things there is. Research on behavioral activation shows that following through — even once — starts to rebuild the connection between action and feeling. Your brain is slowly updating what it believes you're capable of.",
+        "Following through when nothing inside you wants to is exactly how change works. The motivation most people wait for? It comes after the action, not before. You proved that today.",
+        "You moved toward something instead of away from it. That matters more than it might feel right now. Behavior change doesn't happen in big moments — it happens in exactly this kind of small follow-through."
+    ],
+    partly: [
+        "Partly counts. The brain doesn't record 'all or nothing' — it records direction. You moved toward it instead of away from it, and that registers as progress whether it feels that way or not. A smaller version of the thing is still the thing.",
+        "Half a step is still a step forward. In CBT, partial follow-through is treated as success — because starting is the hardest part and you started. Tomorrow the bar can be the same small size.",
+        "Doing part of it is not falling short. It's finding the real size of the step you can take right now. That's useful information, not failure."
+    ],
+    no: [
+        "Avoidance makes sense when everything feels flat — staying still feels safe. But avoidance has a cost: the more we avoid something, the heavier it gets. The fact that you named it here honestly is already a small act of moving toward it.",
+        "Not doing it doesn't mean failure. It means there was a gap between intention and action. That gap is worth being curious about, not critical of. What made it hard? You don't have to answer that now — just let the question sit.",
+        "The brain under depression and emotional blunting lies. It says 'what's the point' before you even start. You didn't do the thing — but you showed up here and answered honestly. That's not nothing. We'll try again with a smaller step today."
+    ]
+};
+
 // ===== LOCAL STORAGE KEYS =====
 const STORAGE_KEY = 'dailycheckin_data';
 const SETTINGS_KEY = 'dailycheckin_settings';
@@ -243,6 +271,29 @@ function getTodayKey() {
 function getTodayEntry() {
     const data = getData();
     return data.entries.find(e => e.date === getTodayKey()) || null;
+}
+
+function getYesterdayCommitment() {
+    const data = getData();
+    const yesterday = getDateKey(-1);
+    const entry = data.entries.find(e => e.date === yesterday);
+    if (!entry) return null;
+    // Already followed up?
+    if (entry.followUp) return null;
+    const commitmentField = COMMITMENT_FIELDS[entry.exercise];
+    if (!commitmentField) return null;
+    const text = entry.answers && entry.answers[commitmentField];
+    if (!text || text.trim() === '') return null;
+    return { date: yesterday, text: text.trim(), exercise: entry.exercise };
+}
+
+function saveFollowUp(date, answer) {
+    const data = getData();
+    const entry = data.entries.find(e => e.date === date);
+    if (entry) {
+        entry.followUp = answer;
+        saveData(data);
+    }
 }
 
 function saveEntry(mood, exercise, answers) {
@@ -353,6 +404,21 @@ function selectMood(value) {
     });
     document.getElementById('moodFeedback').textContent = MOOD_FEEDBACK[value] || '';
     document.getElementById('moodNextBtn').classList.remove('hidden');
+}
+
+function showFollowUp(commitment) {
+    document.getElementById('followUpCommitment').textContent = `"${commitment.text}"`;
+    document.getElementById('followUpResponse').classList.add('hidden');
+    document.getElementById('followUpNextBtn').classList.add('hidden');
+    document.querySelectorAll('.follow-up-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('followUpStep').classList.remove('hidden');
+}
+
+function startExercise() {
+    document.getElementById('exerciseStep').classList.remove('hidden');
+    currentStepIndex = 0;
+    exerciseAnswers = {};
+    buildExerciseStep();
 }
 
 function buildExerciseStep() {
@@ -555,6 +621,16 @@ function generateExportSummary() {
         summary += `${ex ? ex.title : id}: ${count}x\n`;
     });
 
+    const followUps = recent.filter(e => e.followUp);
+    if (followUps.length > 0) {
+        const yes = followUps.filter(e => e.followUp === 'yes').length;
+        const partly = followUps.filter(e => e.followUp === 'partly').length;
+        const no = followUps.filter(e => e.followUp === 'no').length;
+        summary += `\n--- FOLLOW-THROUGH ---\n`;
+        summary += `Did the planned action: ${yes}x yes, ${partly}x partly, ${no}x no\n`;
+        summary += `Follow-through rate: ${Math.round(((yes + partly * 0.5) / followUps.length) * 100)}%\n`;
+    }
+
     return summary;
 }
 
@@ -652,13 +728,42 @@ function init() {
 
     // ===== EVENT LISTENERS =====
 
-    // Mood next
+    // Mood next — check for yesterday's follow-up first
     document.getElementById('moodNextBtn').addEventListener('click', () => {
         document.getElementById('moodStep').classList.add('hidden');
-        document.getElementById('exerciseStep').classList.remove('hidden');
-        currentStepIndex = 0;
-        exerciseAnswers = {};
-        buildExerciseStep();
+        const commitment = getYesterdayCommitment();
+        if (commitment) {
+            showFollowUp(commitment);
+        } else {
+            startExercise();
+        }
+    });
+
+    // Follow-up answer buttons
+    document.querySelectorAll('.follow-up-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const answer = btn.dataset.answer;
+            document.querySelectorAll('.follow-up-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+
+            // Save follow-up to yesterday's entry
+            const commitment = getYesterdayCommitment();
+            if (commitment) saveFollowUp(commitment.date, answer);
+
+            // Show response
+            const responses = FOLLOWUP_RESPONSES[answer];
+            const text = responses[Math.floor(Math.random() * responses.length)];
+            const responseEl = document.getElementById('followUpResponse');
+            responseEl.textContent = text;
+            responseEl.classList.remove('hidden');
+            document.getElementById('followUpNextBtn').classList.remove('hidden');
+        });
+    });
+
+    // Follow-up continue
+    document.getElementById('followUpNextBtn').addEventListener('click', () => {
+        document.getElementById('followUpStep').classList.add('hidden');
+        startExercise();
     });
 
     // Exercise next/complete

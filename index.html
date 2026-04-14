@@ -48,6 +48,22 @@
                     <button id="moodNextBtn" class="btn btn-primary hidden">Continue →</button>
                 </div>
 
+                <!-- Step 1b: Follow-up from yesterday -->
+                <div id="followUpStep" class="card step hidden">
+                    <span class="exercise-tag">Yesterday</span>
+                    <h2>A quick follow-up</h2>
+                    <p class="subtext">You said you would try something yesterday.</p>
+                    <p id="followUpCommitment" class="follow-up-commitment"></p>
+                    <p class="exercise-prompt">Did you do it?</p>
+                    <div class="follow-up-buttons">
+                        <button class="follow-up-btn" data-answer="yes">Yes</button>
+                        <button class="follow-up-btn" data-answer="partly">Partly</button>
+                        <button class="follow-up-btn" data-answer="no">No</button>
+                    </div>
+                    <div id="followUpResponse" class="follow-up-response hidden"></div>
+                    <button id="followUpNextBtn" class="btn btn-primary hidden">Continue to today →</button>
+                </div>
+
                 <!-- Step 2: Exercise -->
                 <div id="exerciseStep" class="card step hidden">
                     <div id="exerciseHeader">
