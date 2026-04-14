@@ -486,19 +486,26 @@ function buildMoodChart() {
             if (entry.mood >= 7) bar.classList.add('high');
             else if (entry.mood >= 4) bar.classList.add('mid');
             else bar.classList.add('low');
-            bar.title = `${dateKey}: ${entry.mood}/10`;
+
+            // Show mood score above the bar
+            const score = document.createElement('span');
+            score.className = 'chart-score';
+            score.textContent = entry.mood;
+            wrap.appendChild(score);
         } else {
             bar.style.height = '4px';
             bar.style.opacity = '0.2';
         }
 
-        const label = document.createElement('span');
-        label.className = 'chart-day';
+        wrap.appendChild(bar);
+
         const d = new Date();
         d.setDate(d.getDate() - i);
-        label.textContent = d.getDate();
+        const label = document.createElement('span');
+        label.className = 'chart-day';
+        // Show "Mon 14" style label
+        label.textContent = d.toLocaleDateString('sv-SE', { weekday: 'short' }).slice(0,2) + ' ' + d.getDate();
 
-        wrap.appendChild(bar);
         wrap.appendChild(label);
         chart.appendChild(wrap);
     }
