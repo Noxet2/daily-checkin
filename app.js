@@ -201,12 +201,15 @@ const MOOD_FEEDBACK = {
 };
 
 // ===== COMMITMENT FIELDS =====
-// Which field in each exercise contains tomorrow's commitment
+// Which field in each exercise contains tomorrow's commitment.
+// AI-enabled exercises all save the last AI answer to 'ai_commitment'.
 const COMMITMENT_FIELDS = {
-    'behavioral-activation': 'plan',
-    'opposite-action': 'plan',
-    'activity-planning': 'schedule',
-    'values': 'tomorrow'
+    'behavioral-activation': 'ai_commitment',
+    'opposite-action': 'ai_commitment',
+    'activity-planning': 'ai_commitment',
+    'values': 'ai_commitment',
+    'thought-record': 'ai_commitment',
+    'self-compassion': 'ai_commitment',
 };
 
 // ===== FOLLOW-UP RESPONSES =====
@@ -239,11 +242,11 @@ let currentStepIndex = 0;
 let exerciseAnswers = {};
 let todayExercise = null;
 
-// AI follow-up step state
-let aiFollowUpQuestion = null;  // the generated question text
-let showingAIStep = false;       // currently on the AI-generated step
-let aiStepDone = false;          // AI step has been completed, now on static steps 1+
-let fetchingAIStep = false;      // waiting for API response
+// AI exercise flow state
+let aiQuestions = [];        // array of AI-generated questions (returned all at once)
+let aiQuestionIndex = 0;     // which AI question we're currently showing
+let usingAIFlow = false;     // true once we've switched to AI questions
+let fetchingAIStep = false;  // waiting for API response
 
 // ===== DATA FUNCTIONS =====
 
@@ -430,9 +433,9 @@ function startExercise() {
     document.getElementById('exerciseStep').classList.remove('hidden');
     currentStepIndex = 0;
     exerciseAnswers = {};
-    aiFollowUpQuestion = null;
-    showingAIStep = false;
-    aiStepDone = false;
+    aiQuestions = [];
+    aiQuestionIndex = 0;
+    usingAIFlow = false;
     fetchingAIStep = false;
     buildExerciseStep();
 }
@@ -450,14 +453,14 @@ function buildExerciseStep() {
     const nextBtn = document.getElementById('exerciseNextBtn');
     nextBtn.disabled = false;
 
-    const hasAI = !!exercise.aiFollowUp;
-    const totalSteps = exercise.steps.length + (hasAI ? 1 : 0);
+    // --- AI flow: show AI-generated questions ---
+    if (usingAIFlow) {
+        const totalSteps = 1 + aiQuestions.length; // step 0 + AI questions
+        const displayStep = 2 + aiQuestionIndex;   // step 0 is 1, first AI is 2
 
-    // --- AI step ---
-    if (showingAIStep) {
         const indicator = document.createElement('p');
         indicator.className = 'exercise-step-indicator';
-        indicator.textContent = `Step 2 of ${totalSteps}`;
+        indicator.textContent = `Step ${displayStep} of ${totalSteps}`;
         content.appendChild(indicator);
 
         const aiLabel = document.createElement('span');
@@ -467,7 +470,7 @@ function buildExerciseStep() {
 
         const prompt = document.createElement('p');
         prompt.className = 'exercise-prompt';
-        prompt.textContent = aiFollowUpQuestion;
+        prompt.textContent = aiQuestions[aiQuestionIndex];
         content.appendChild(prompt);
 
         const textarea = document.createElement('textarea');
@@ -476,20 +479,16 @@ function buildExerciseStep() {
         textarea.id = 'exerciseInput';
         content.appendChild(textarea);
 
-        nextBtn.textContent = 'Next →';
+        const isLast = aiQuestionIndex === aiQuestions.length - 1;
+        nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
         return;
     }
 
-    // --- Normal static step ---
+    // --- Static step (step 0 for AI exercises, all steps for non-AI exercises) ---
     const step = exercise.steps[currentStepIndex];
-
-    // Step number: add 1 for the AI step if it's already been done
-    let displayStep;
-    if (aiStepDone) {
-        displayStep = currentStepIndex + 2;
-    } else {
-        displayStep = currentStepIndex + 1;
-    }
+    const hasAI = !!exercise.aiFollowUp;
+    // For AI exercises: total = 1 (step 0) + 2 (AI questions). For non-AI: static count.
+    const totalSteps = hasAI ? 3 : exercise.steps.length;
 
     // Show info box on first step
     if (currentStepIndex === 0 && exercise.info) {
@@ -501,7 +500,7 @@ function buildExerciseStep() {
 
     const indicator = document.createElement('p');
     indicator.className = 'exercise-step-indicator';
-    indicator.textContent = `Step ${displayStep} of ${totalSteps}`;
+    indicator.textContent = `Step ${currentStepIndex + 1} of ${totalSteps}`;
     content.appendChild(indicator);
 
     const prompt = document.createElement('p');
@@ -516,7 +515,7 @@ function buildExerciseStep() {
     textarea.value = exerciseAnswers[step.field] || '';
     content.appendChild(textarea);
 
-    const isLast = currentStepIndex === exercise.steps.length - 1;
+    const isLast = !hasAI && currentStepIndex === exercise.steps.length - 1;
     nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
 }
 
@@ -524,41 +523,48 @@ function advanceExerciseStep() {
     const input = document.getElementById('exerciseInput');
     const answer = input ? input.value.trim() : '';
 
-    // If we're on the AI-generated step, save its answer and advance to static step 1
-    if (showingAIStep) {
-        exerciseAnswers['ai_followup'] = answer;
-        showingAIStep = false;
-        aiStepDone = true;
-        currentStepIndex = 1;
-        buildExerciseStep();
+    // --- We're in AI question flow ---
+    if (usingAIFlow) {
+        exerciseAnswers[`ai_q${aiQuestionIndex}`] = answer;
+
+        const isLast = aiQuestionIndex === aiQuestions.length - 1;
+        if (isLast) {
+            // Save last AI answer as the commitment for tomorrow's follow-up
+            const commitField = COMMITMENT_FIELDS[todayExercise.id];
+            if (commitField) exerciseAnswers[commitField] = answer;
+            const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
+            showCompletion(entry);
+        } else {
+            aiQuestionIndex++;
+            buildExerciseStep();
+        }
         return;
     }
 
+    // --- Static step ---
     const step = todayExercise.steps[currentStepIndex];
     exerciseAnswers[step.field] = answer;
 
-    const isLast = currentStepIndex === todayExercise.steps.length - 1;
-
-    if (isLast) {
-        const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
-        showCompletion(entry);
-        return;
-    }
-
-    // After step 0 of an AI-enabled exercise, fetch the adaptive follow-up
-    if (currentStepIndex === 0 && todayExercise.aiFollowUp && !aiStepDone) {
+    // After step 0 of an AI-enabled exercise: fetch all follow-up questions
+    if (currentStepIndex === 0 && todayExercise.aiFollowUp) {
         fetchAIFollowUp(answer);
         return;
     }
 
-    currentStepIndex++;
-    buildExerciseStep();
+    // Non-AI exercise: advance through static steps normally
+    const isLast = currentStepIndex === todayExercise.steps.length - 1;
+    if (isLast) {
+        const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
+        showCompletion(entry);
+    } else {
+        currentStepIndex++;
+        buildExerciseStep();
+    }
 }
 
 async function fetchAIFollowUp(firstAnswer) {
     fetchingAIStep = true;
 
-    // Show loading state
     const content = document.getElementById('exerciseContent');
     content.innerHTML = '<div class="ai-loading"><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span></div>';
     document.getElementById('exerciseNextBtn').disabled = true;
@@ -579,13 +585,14 @@ async function fetchAIFollowUp(firstAnswer) {
         if (!response.ok) throw new Error('API error');
 
         const data = await response.json();
-        aiFollowUpQuestion = data.question;
-        showingAIStep = true;
+        aiQuestions = Array.isArray(data.questions) ? data.questions : [data.questions || 'How does that feel?'];
+        aiQuestionIndex = 0;
+        usingAIFlow = true;
     } catch (err) {
-        console.error('AI follow-up failed, skipping to next static step:', err);
-        // Graceful fallback: skip AI step and continue normally
+        console.error('AI follow-up failed, falling back to static steps:', err);
+        // Fallback: continue with remaining static steps
         currentStepIndex = 1;
-        aiStepDone = true;
+        usingAIFlow = false;
     } finally {
         fetchingAIStep = false;
     }
