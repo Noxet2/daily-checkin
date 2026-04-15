@@ -7,6 +7,7 @@ const EXERCISES = [
         title: 'Thought Record',
         tag: 'CBT',
         description: 'Catch a negative thought and challenge it with evidence.',
+        aiFollowUp: true,
         steps: [
             {
                 prompt: 'Describe the situation briefly.',
@@ -35,6 +36,7 @@ const EXERCISES = [
         title: 'Behavioral Activation',
         tag: 'CBT',
         description: 'Notice what you did today. Action comes before feeling — not after.',
+        aiFollowUp: true,
         steps: [
             {
                 prompt: 'Name 3 things you did today.',
@@ -87,6 +89,7 @@ const EXERCISES = [
         title: 'Values Check',
         tag: 'ACT',
         description: 'When feelings go quiet, values can still guide you.',
+        aiFollowUp: true,
         info: 'In Acceptance and Commitment Therapy, values are not feelings — they are directions. You can act on a value even when you feel nothing.',
         steps: [
             {
@@ -111,6 +114,7 @@ const EXERCISES = [
         title: 'Self-Compassion',
         tag: 'CBT',
         description: 'Treat yourself the way you would treat someone you care about.',
+        aiFollowUp: true,
         info: 'Research shows self-criticism makes depression and emotional blunting worse. Self-compassion is not weakness — it is a clinically validated tool.',
         steps: [
             {
@@ -135,6 +139,7 @@ const EXERCISES = [
         title: 'Opposite Action',
         tag: 'DBT',
         description: 'When your instinct is to avoid, do something slightly different.',
+        aiFollowUp: true,
         info: 'From Dialectical Behavior Therapy: when emotions drive avoidance, the avoidance itself keeps the problem alive. Doing even a tiny version of the opposite breaks the cycle — not because it feels good, but because it proves to your brain that you can.',
         steps: [
             {
@@ -159,6 +164,7 @@ const EXERCISES = [
         title: 'Pleasant Activity Planning',
         tag: 'Behavioral',
         description: 'Schedule something small that you once found enjoyable.',
+        aiFollowUp: true,
         info: 'With emotional blunting, activities may not feel enjoyable — but doing them anyway is what gradually rebuilds the connection. This is called behavioral re-engagement.',
         steps: [
             {
@@ -232,6 +238,12 @@ let currentExerciseIndex = 0;
 let currentStepIndex = 0;
 let exerciseAnswers = {};
 let todayExercise = null;
+
+// AI follow-up step state
+let aiFollowUpQuestion = null;  // the generated question text
+let showingAIStep = false;       // currently on the AI-generated step
+let aiStepDone = false;          // AI step has been completed, now on static steps 1+
+let fetchingAIStep = false;      // waiting for API response
 
 // ===== DATA FUNCTIONS =====
 
@@ -418,12 +430,15 @@ function startExercise() {
     document.getElementById('exerciseStep').classList.remove('hidden');
     currentStepIndex = 0;
     exerciseAnswers = {};
+    aiFollowUpQuestion = null;
+    showingAIStep = false;
+    aiStepDone = false;
+    fetchingAIStep = false;
     buildExerciseStep();
 }
 
 function buildExerciseStep() {
     const exercise = todayExercise;
-    const step = exercise.steps[currentStepIndex];
 
     document.getElementById('exerciseTag').textContent = exercise.tag;
     document.getElementById('exerciseTitle').textContent = exercise.title;
@@ -432,7 +447,51 @@ function buildExerciseStep() {
     const content = document.getElementById('exerciseContent');
     content.innerHTML = '';
 
-    // Show info box on first step if exercise has one
+    const nextBtn = document.getElementById('exerciseNextBtn');
+    nextBtn.disabled = false;
+
+    const hasAI = !!exercise.aiFollowUp;
+    const totalSteps = exercise.steps.length + (hasAI ? 1 : 0);
+
+    // --- AI step ---
+    if (showingAIStep) {
+        const indicator = document.createElement('p');
+        indicator.className = 'exercise-step-indicator';
+        indicator.textContent = `Step 2 of ${totalSteps}`;
+        content.appendChild(indicator);
+
+        const aiLabel = document.createElement('span');
+        aiLabel.className = 'ai-step-label';
+        aiLabel.textContent = '✦ Follow-up';
+        content.appendChild(aiLabel);
+
+        const prompt = document.createElement('p');
+        prompt.className = 'exercise-prompt';
+        prompt.textContent = aiFollowUpQuestion;
+        content.appendChild(prompt);
+
+        const textarea = document.createElement('textarea');
+        textarea.className = 'exercise-textarea';
+        textarea.placeholder = 'Take your time...';
+        textarea.id = 'exerciseInput';
+        content.appendChild(textarea);
+
+        nextBtn.textContent = 'Next →';
+        return;
+    }
+
+    // --- Normal static step ---
+    const step = exercise.steps[currentStepIndex];
+
+    // Step number: add 1 for the AI step if it's already been done
+    let displayStep;
+    if (aiStepDone) {
+        displayStep = currentStepIndex + 2;
+    } else {
+        displayStep = currentStepIndex + 1;
+    }
+
+    // Show info box on first step
     if (currentStepIndex === 0 && exercise.info) {
         const infoBox = document.createElement('div');
         infoBox.className = 'exercise-info-box';
@@ -440,19 +499,16 @@ function buildExerciseStep() {
         content.appendChild(infoBox);
     }
 
-    // Step indicator
     const indicator = document.createElement('p');
     indicator.className = 'exercise-step-indicator';
-    indicator.textContent = `Step ${currentStepIndex + 1} of ${exercise.steps.length}`;
+    indicator.textContent = `Step ${displayStep} of ${totalSteps}`;
     content.appendChild(indicator);
 
-    // Prompt
     const prompt = document.createElement('p');
     prompt.className = 'exercise-prompt';
     prompt.textContent = step.prompt;
     content.appendChild(prompt);
 
-    // Textarea
     const textarea = document.createElement('textarea');
     textarea.className = 'exercise-textarea';
     textarea.placeholder = step.placeholder;
@@ -460,27 +516,81 @@ function buildExerciseStep() {
     textarea.value = exerciseAnswers[step.field] || '';
     content.appendChild(textarea);
 
-    // Update button text
-    const nextBtn = document.getElementById('exerciseNextBtn');
     const isLast = currentStepIndex === exercise.steps.length - 1;
     nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
 }
 
 function advanceExerciseStep() {
-    const step = todayExercise.steps[currentStepIndex];
     const input = document.getElementById('exerciseInput');
-    exerciseAnswers[step.field] = input.value.trim();
+    const answer = input ? input.value.trim() : '';
+
+    // If we're on the AI-generated step, save its answer and advance to static step 1
+    if (showingAIStep) {
+        exerciseAnswers['ai_followup'] = answer;
+        showingAIStep = false;
+        aiStepDone = true;
+        currentStepIndex = 1;
+        buildExerciseStep();
+        return;
+    }
+
+    const step = todayExercise.steps[currentStepIndex];
+    exerciseAnswers[step.field] = answer;
 
     const isLast = currentStepIndex === todayExercise.steps.length - 1;
 
     if (isLast) {
-        // Save and complete
         const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
         showCompletion(entry);
-    } else {
-        currentStepIndex++;
-        buildExerciseStep();
+        return;
     }
+
+    // After step 0 of an AI-enabled exercise, fetch the adaptive follow-up
+    if (currentStepIndex === 0 && todayExercise.aiFollowUp && !aiStepDone) {
+        fetchAIFollowUp(answer);
+        return;
+    }
+
+    currentStepIndex++;
+    buildExerciseStep();
+}
+
+async function fetchAIFollowUp(firstAnswer) {
+    fetchingAIStep = true;
+
+    // Show loading state
+    const content = document.getElementById('exerciseContent');
+    content.innerHTML = '<div class="ai-loading"><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span><span class="ai-loading-dot"></span></div>';
+    document.getElementById('exerciseNextBtn').disabled = true;
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                exerciseId: todayExercise.id,
+                exerciseTitle: todayExercise.title,
+                exerciseTag: todayExercise.tag,
+                exerciseDescription: todayExercise.description,
+                answers: { [todayExercise.steps[0].field]: firstAnswer }
+            })
+        });
+
+        if (!response.ok) throw new Error('API error');
+
+        const data = await response.json();
+        aiFollowUpQuestion = data.question;
+        showingAIStep = true;
+    } catch (err) {
+        console.error('AI follow-up failed, skipping to next static step:', err);
+        // Graceful fallback: skip AI step and continue normally
+        currentStepIndex = 1;
+        aiStepDone = true;
+    } finally {
+        fetchingAIStep = false;
+    }
+
+    buildExerciseStep();
 }
 
 function showCompletion(entry) {
