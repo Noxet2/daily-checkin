@@ -554,6 +554,8 @@ function advanceExerciseStep() {
     // Non-AI exercise: advance through static steps normally
     const isLast = currentStepIndex === todayExercise.steps.length - 1;
     if (isLast) {
+             const commitField = COMMITMENT_FIELDS[todayExercise.id];
+                  if (commitField && !exerciseAnswers[commitField]) exerciseAnswers[commitField] = answer;
         const entry = saveEntry(selectedMood, todayExercise, exerciseAnswers);
         showCompletion(entry);
     } else {
