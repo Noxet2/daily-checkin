@@ -48,7 +48,10 @@ IMPORTANT RULES:
             ]
         });
 
-        const responseText = message.content[0].text.trim();
+        let responseText = message.content[0].text.trim();
+
+        // Strip markdown code blocks if Claude wraps its response
+        responseText = responseText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
 
         // Parse the JSON array Claude returns
         let questions;
@@ -56,8 +59,17 @@ IMPORTANT RULES:
             questions = JSON.parse(responseText);
             if (!Array.isArray(questions)) throw new Error('Not an array');
         } catch {
-            // Fallback: treat as single question if JSON parsing fails
-            questions = [responseText];
+            // Try to extract a JSON array embedded anywhere in the text
+            const match = responseText.match(/\[[\s\S]*\]/);
+            if (match) {
+                try {
+                    questions = JSON.parse(match[0]);
+                } catch {
+                    questions = [responseText];
+                }
+            } else {
+                questions = [responseText];
+            }
         }
 
         res.status(200).json({ questions });
