@@ -212,9 +212,9 @@ const ENERGY_QUESTIONS = [
 ];
 
 const TONE_QUESTIONS = [
-    "What's your inner weather today?",
+    "How would you describe your mood right now?",
     "If you had to put a word on it, how are you feeling?",
-    "What's your mood tone right now?"
+    "What's your mood like today?"
 ];
 
 const ENERGY_OPTIONS = [
@@ -226,12 +226,12 @@ const ENERGY_OPTIONS = [
 ];
 
 const TONE_OPTIONS = [
-    { label: "Heavy",  score: 1 },
-    { label: "Down",   score: 3 },
-    { label: "Flat",   score: 5 },
-    { label: "Okay",   score: 7 },
-    { label: "Light",  score: 9 },
-    { label: "Good",   score: 10 },
+    { label: "Sad",   score: 1 },
+    { label: "Down",  score: 3 },
+    { label: "Numb",  score: 5 },
+    { label: "Okay",  score: 7 },
+    { label: "Calm",  score: 9 },
+    { label: "Happy", score: 10 },
 ];
 
 // ===== COMMITMENT FIELDS =====
