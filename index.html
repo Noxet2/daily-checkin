@@ -35,14 +35,17 @@
 
                 <!-- Step 1: Mood -->
                 <div id="moodStep" class="card step">
-                    <h2>How are you right now?</h2>
-                    <div class="mood-scale">
-                        <div class="mood-buttons" id="moodButtons"></div>
-                        <div class="mood-labels">
-                            <span>Very bad</span>
-                            <span>Okay</span>
-                            <span>Great</span>
-                        </div>
+                    <!-- Sub-step 1: Energy -->
+                    <div id="moodEnergyPanel">
+                        <p class="mood-step-counter">1 of 2</p>
+                        <h2 id="energyQuestion"></h2>
+                        <div class="mood-word-buttons" id="energyButtons"></div>
+                    </div>
+                    <!-- Sub-step 2: Mood tone -->
+                    <div id="moodTonePanel" class="hidden">
+                        <p class="mood-step-counter">2 of 2</p>
+                        <h2 id="toneQuestion"></h2>
+                        <div class="mood-word-buttons" id="toneButtons"></div>
                     </div>
                     <p id="moodFeedback" class="mood-feedback"></p>
                     <button id="moodNextBtn" class="btn btn-primary hidden">Continue →</button>

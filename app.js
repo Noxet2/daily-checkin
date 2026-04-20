@@ -200,6 +200,40 @@ const MOOD_FEEDBACK = {
     10: "Excellent. Remember this feeling — it exists."
 };
 
+// ===== MOOD CHECK-IN — ROTATING QUESTIONS & WORD OPTIONS =====
+// Two-axis approach based on Russell's Circumplex Model:
+// Axis 1: arousal/energy  |  Axis 2: valence/tone
+// Questions rotate by day to prevent autopilot responses.
+
+const ENERGY_QUESTIONS = [
+    "What's your energy like right now?",
+    "How does your body feel this morning?",
+    "What's your physical state today?"
+];
+
+const TONE_QUESTIONS = [
+    "What's your inner weather today?",
+    "If you had to put a word on it, how are you feeling?",
+    "What's your mood tone right now?"
+];
+
+const ENERGY_OPTIONS = [
+    { label: "Drained",  score: 1 },
+    { label: "Low",      score: 3 },
+    { label: "Neutral",  score: 5 },
+    { label: "Awake",    score: 7 },
+    { label: "Buzzing",  score: 9 },
+];
+
+const TONE_OPTIONS = [
+    { label: "Heavy",  score: 1 },
+    { label: "Down",   score: 3 },
+    { label: "Flat",   score: 5 },
+    { label: "Okay",   score: 7 },
+    { label: "Light",  score: 9 },
+    { label: "Good",   score: 10 },
+];
+
 // ===== COMMITMENT FIELDS =====
 // Which field in each exercise contains tomorrow's commitment.
 // AI-enabled exercises all save the last AI answer to 'ai_commitment'.
@@ -236,7 +270,12 @@ const STORAGE_KEY = 'dailycheckin_data';
 const SETTINGS_KEY = 'dailycheckin_settings';
 
 // ===== APP STATE =====
-let selectedMood = null;
+let selectedMood        = null;   // combined 1-10 score (computed from energy + tone)
+let selectedEnergy      = null;   // score from energy sub-step
+let selectedEnergyLabel = null;   // word label from energy sub-step
+let selectedTone        = null;   // score from tone sub-step
+let selectedToneLabel   = null;   // word label from tone sub-step
+let moodSubStep         = 0;      // 0 = energy panel, 1 = tone panel
 let currentExerciseIndex = 0;
 let currentStepIndex = 0;
 let exerciseAnswers = {};
@@ -316,6 +355,8 @@ function saveEntry(mood, exercise, answers) {
     const entry = {
         date: getTodayKey(),
         mood: mood,
+        energyLabel: selectedEnergyLabel || null,
+        toneLabel:   selectedToneLabel   || null,
         exercise: exercise.id,
         answers: answers,
         timestamp: Date.now()
@@ -400,24 +441,60 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.remove('hidden');
 }
 
-function buildMoodButtons() {
-    const container = document.getElementById('moodButtons');
-    container.innerHTML = '';
-    for (let i = 1; i <= 10; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'mood-btn';
-        btn.textContent = i;
-        btn.addEventListener('click', () => selectMood(i));
-        container.appendChild(btn);
-    }
+function getDayOfYear() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor((now - start) / 86400000);
 }
 
-function selectMood(value) {
-    selectedMood = value;
-    document.querySelectorAll('.mood-btn').forEach((btn, idx) => {
-        btn.classList.toggle('selected', idx + 1 === value);
+function buildMoodPanels() {
+    const day = getDayOfYear();
+
+    // Rotate questions independently so they don't always pair the same way
+    document.getElementById('energyQuestion').textContent =
+        ENERGY_QUESTIONS[day % ENERGY_QUESTIONS.length];
+    document.getElementById('toneQuestion').textContent =
+        TONE_QUESTIONS[Math.floor(day / ENERGY_QUESTIONS.length) % TONE_QUESTIONS.length];
+
+    // Build energy word buttons
+    const energyContainer = document.getElementById('energyButtons');
+    energyContainer.innerHTML = '';
+    ENERGY_OPTIONS.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'mood-word-btn';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => selectEnergy(opt.score, btn));
+        energyContainer.appendChild(btn);
     });
-    document.getElementById('moodFeedback').textContent = MOOD_FEEDBACK[value] || '';
+
+    // Build tone word buttons
+    const toneContainer = document.getElementById('toneButtons');
+    toneContainer.innerHTML = '';
+    TONE_OPTIONS.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'mood-word-btn';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', () => selectTone(opt.score, btn));
+        toneContainer.appendChild(btn);
+    });
+}
+
+function selectEnergy(score, btn) {
+    selectedEnergy = score;
+    selectedEnergyLabel = btn.textContent;
+    document.querySelectorAll('#energyButtons .mood-word-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('moodNextBtn').classList.remove('hidden');
+}
+
+function selectTone(score, btn) {
+    selectedTone = score;
+    selectedToneLabel = btn.textContent;
+    document.querySelectorAll('#toneButtons .mood-word-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    // Compute combined score now so feedback is visible before Continue
+    const combined = Math.round((selectedEnergy + score) / 2);
+    document.getElementById('moodFeedback').textContent = MOOD_FEEDBACK[combined] || '';
     document.getElementById('moodNextBtn').classList.remove('hidden');
 }
 
@@ -820,7 +897,12 @@ function scheduleNotificationCheck() {
 // ===== INIT =====
 
 function init() {
-    buildMoodButtons();
+    moodSubStep = 0;
+    selectedEnergy = null;
+    selectedEnergyLabel = null;
+    selectedTone = null;
+    selectedToneLabel = null;
+    buildMoodPanels();
     updateStreakBadge();
 
     document.getElementById('greeting').textContent = getGreeting();
@@ -847,14 +929,25 @@ function init() {
 
     // ===== EVENT LISTENERS =====
 
-    // Mood next — check for yesterday's follow-up first
+    // Mood next — two sub-steps (energy → tone), then proceed
     document.getElementById('moodNextBtn').addEventListener('click', () => {
-        document.getElementById('moodStep').classList.add('hidden');
-        const commitment = getYesterdayCommitment();
-        if (commitment) {
-            showFollowUp(commitment);
+        if (moodSubStep === 0) {
+            // Advance from energy to tone panel
+            document.getElementById('moodEnergyPanel').classList.add('hidden');
+            document.getElementById('moodTonePanel').classList.remove('hidden');
+            document.getElementById('moodNextBtn').classList.add('hidden');
+            document.getElementById('moodFeedback').textContent = '';
+            moodSubStep = 1;
         } else {
-            startExercise();
+            // Both done — compute combined score and move on
+            selectedMood = Math.round((selectedEnergy + selectedTone) / 2);
+            document.getElementById('moodStep').classList.add('hidden');
+            const commitment = getYesterdayCommitment();
+            if (commitment) {
+                showFollowUp(commitment);
+            } else {
+                startExercise();
+            }
         }
     });
 
@@ -971,7 +1064,10 @@ function showAlreadyDone(entry) {
     let msg = 'Come back tomorrow.';
     if (hour < 17) msg = 'Rest of the day is yours.';
     document.getElementById('alreadyDoneMessage').textContent = msg;
-    document.getElementById('todayMoodDisplay').textContent = `${entry.mood} / 10`;
+    const energyLabel = entry.energyLabel || '—';
+    const toneLabel   = entry.toneLabel   || '—';
+    document.getElementById('todayMoodDisplay').textContent =
+        entry.energyLabel ? `${energyLabel}  ·  ${toneLabel}` : `${entry.mood} / 10`;
     updateStreakBadge();
 }
 

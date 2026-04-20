@@ -163,52 +163,50 @@ h3 {
     box-shadow: 0 2px 8px rgba(255,159,28,0.3);
 }
 
-/* ===== MOOD BUTTONS ===== */
-.mood-scale {
-    margin: 8px 0 16px;
+/* ===== MOOD WORD BUTTONS ===== */
+.mood-step-counter {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 10px;
 }
 
-.mood-buttons {
+.mood-word-buttons {
     display: flex;
-    gap: 5px;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 16px;
 }
 
-.mood-btn {
-    flex: 1;
-    height: 46px;
+.mood-word-btn {
+    flex: 1 1 calc(33% - 10px);
+    min-width: 80px;
+    padding: 12px 8px;
     border: 2px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     background: #f8f6ff;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
     color: var(--text-light);
     transition: all 0.2s ease;
+    text-align: center;
 }
 
-.mood-btn:hover {
+.mood-word-btn:hover {
     border-color: var(--primary);
     color: var(--primary);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(124,107,196,0.2);
 }
 
-.mood-btn.selected {
+.mood-word-btn.selected {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-color: transparent;
     color: white;
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(124,107,196,0.35);
-}
-
-.mood-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: var(--text-light);
-    padding: 0 2px;
 }
 
 .mood-feedback {
