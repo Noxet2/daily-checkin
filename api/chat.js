@@ -37,7 +37,7 @@ Based on what they wrote, generate exactly 2 follow-up questions that build on t
 IMPORTANT RULES:
 - If they say they have no negative thoughts, nothing is bothering them, or things are fine: do NOT ask about negative thoughts or problems. Instead ask about what's going well, what feels stable, or what they're noticing today.
 - Make each question respond directly to what they actually wrote — not to a generic version of the exercise
-- The second question should end with something concrete they could do or try, even something very small
+- The second question should invite something concrete they could do or try today or tomorrow — keep it immediate and very small, not a vague goal for the weekend or next week
 - Each question is ONE sentence, warm and direct
 - Return ONLY a valid JSON array of 2 strings, nothing else. Example: ["Question one?", "Question two?"]`,
             messages: [

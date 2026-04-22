@@ -262,6 +262,11 @@ const FOLLOWUP_RESPONSES = {
         "Avoidance makes sense when everything feels flat — staying still feels safe. But avoidance has a cost: the more we avoid something, the heavier it gets. The fact that you named it here honestly is already a small act of moving toward it.",
         "Not doing it doesn't mean failure. It means there was a gap between intention and action. That gap is worth being curious about, not critical of. What made it hard? You don't have to answer that now — just let the question sit.",
         "The brain under depression and emotional blunting lies. It says 'what's the point' before you even start. You didn't do the thing — but you showed up here and answered honestly. That's not nothing. We'll try again with a smaller step today."
+    ],
+    'not-yet': [
+        "The plan is still on. That's fine — commitments with a future date don't expire overnight. We'll check in again when the time comes.",
+        "Still upcoming. No problem. The intention is set, and that matters. Come back to it when the moment arrives.",
+        "Got it — it's still ahead of you. Hold onto the plan. You've already done the hardest part, which is deciding to do it."
     ]
 };
 
