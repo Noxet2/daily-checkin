@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Daily Check-in</title>
+    <title>Daglig Check-in</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4a7c7e">
@@ -15,12 +15,12 @@
 
         <header>
             <div class="header-left">
-                <h1>Daily Check-in</h1>
+                <h1>Daglig Check-in</h1>
                 <div id="streakBadge" class="streak-badge hidden">🔥 <span id="streakCount">0</span></div>
             </div>
             <div class="header-right">
-                <button id="statsBtn" class="icon-btn" title="Stats">📊</button>
-                <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
+                <button id="statsBtn" class="icon-btn" title="Statistik">📊</button>
+                <button id="settingsBtn" class="icon-btn" title="Inställningar">⚙️</button>
             </div>
         </header>
 
@@ -30,42 +30,42 @@
             <div id="checkinScreen" class="screen">
                 <div class="card">
                     <p id="greeting" class="greeting"></p>
-                    <p class="subtext">Takes about 3 minutes. Let's see how you're doing.</p>
+                    <p class="subtext">Tar ungefär 3 minuter. Låt oss se hur du mår.</p>
                 </div>
 
                 <!-- Step 1: Mood -->
                 <div id="moodStep" class="card step">
                     <!-- Sub-step 1: Energy -->
                     <div id="moodEnergyPanel">
-                        <p class="mood-step-counter">1 of 2</p>
+                        <p class="mood-step-counter">1 av 2</p>
                         <h2 id="energyQuestion"></h2>
                         <div class="mood-word-buttons" id="energyButtons"></div>
                     </div>
                     <!-- Sub-step 2: Mood tone -->
                     <div id="moodTonePanel" class="hidden">
-                        <p class="mood-step-counter">2 of 2</p>
+                        <p class="mood-step-counter">2 av 2</p>
                         <h2 id="toneQuestion"></h2>
                         <div class="mood-word-buttons" id="toneButtons"></div>
                     </div>
                     <p id="moodFeedback" class="mood-feedback"></p>
-                    <button id="moodNextBtn" class="btn btn-primary hidden">Continue →</button>
+                    <button id="moodNextBtn" class="btn btn-primary hidden">Fortsätt →</button>
                 </div>
 
                 <!-- Step 1b: Follow-up from yesterday -->
                 <div id="followUpStep" class="card step hidden">
-                    <span class="exercise-tag">Follow-up</span>
-                    <h2>A quick check-in</h2>
-                    <p class="subtext">You made a commitment.</p>
+                    <span class="exercise-tag">Uppföljning</span>
+                    <h2>En snabb check-in</h2>
+                    <p class="subtext">Du gjorde ett åtagande.</p>
                     <p id="followUpCommitment" class="follow-up-commitment"></p>
-                    <p class="exercise-prompt">Did you follow through?</p>
+                    <p class="exercise-prompt">Höll du det?</p>
                     <div class="follow-up-buttons">
-                        <button class="follow-up-btn" data-answer="yes">Yes</button>
-                        <button class="follow-up-btn" data-answer="partly">Partly</button>
-                        <button class="follow-up-btn" data-answer="no">No</button>
-                        <button class="follow-up-btn" data-answer="not-yet">Not yet</button>
+                        <button class="follow-up-btn" data-answer="yes">Ja</button>
+                        <button class="follow-up-btn" data-answer="partly">Delvis</button>
+                        <button class="follow-up-btn" data-answer="no">Nej</button>
+                        <button class="follow-up-btn" data-answer="not-yet">Inte än</button>
                     </div>
                     <div id="followUpResponse" class="follow-up-response hidden"></div>
-                    <button id="followUpNextBtn" class="btn btn-primary hidden">Continue to today →</button>
+                    <button id="followUpNextBtn" class="btn btn-primary hidden">Fortsätt till idag →</button>
                 </div>
 
                 <!-- Step 2: Exercise -->
@@ -76,15 +76,15 @@
                         <p id="exerciseDesc" class="subtext"></p>
                     </div>
                     <div id="exerciseContent"></div>
-                    <button id="exerciseNextBtn" class="btn btn-primary">Complete →</button>
+                    <button id="exerciseNextBtn" class="btn btn-primary">Klar →</button>
                 </div>
 
                 <!-- Step 3: Done -->
                 <div id="completionStep" class="card step hidden">
                     <div class="completion-icon">✓</div>
-                    <h2>Done for today.</h2>
+                    <h2>Klar för idag.</h2>
                     <p class="subtext" id="completionMessage"></p>
-                    <button id="viewStatsBtn" class="btn btn-secondary">View your progress</button>
+                    <button id="viewStatsBtn" class="btn btn-secondary">Se din utveckling</button>
                 </div>
             </div>
 
@@ -92,52 +92,52 @@
             <div id="alreadyDoneScreen" class="screen hidden">
                 <div class="card">
                     <div class="completion-icon">✓</div>
-                    <h2>You've checked in today.</h2>
+                    <h2>Du har checkat in idag.</h2>
                     <p class="subtext" id="alreadyDoneMessage"></p>
                 </div>
                 <div class="card" id="todaySummaryCard">
-                    <h3>Today's mood</h3>
+                    <h3>Dagens humör</h3>
                     <div id="todayMoodDisplay" class="mood-display"></div>
                 </div>
-                <button id="goToStatsBtn" class="btn btn-primary">View progress →</button>
+                <button id="goToStatsBtn" class="btn btn-primary">Se framsteg →</button>
             </div>
 
             <!-- SCREEN: Stats -->
             <div id="statsScreen" class="screen hidden">
                 <div class="screen-header">
-                    <button class="back-btn" data-back="home">← Back</button>
-                    <h2>Your Progress</h2>
+                    <button class="back-btn" data-back="home">← Tillbaka</button>
+                    <h2>Din Framgång</h2>
                 </div>
 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-number" id="statStreak">0</div>
-                        <div class="stat-label">Day streak</div>
+                        <div class="stat-label">Dagars streak</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="statAvgMood">—</div>
-                        <div class="stat-label">Avg mood (7 days)</div>
+                        <div class="stat-label">Snitthumör (7 dagar)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="statTotal">0</div>
-                        <div class="stat-label">Total check-ins</div>
+                        <div class="stat-label">Totalt antal</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="statThisMonth">0</div>
-                        <div class="stat-label">This month</div>
+                        <div class="stat-label">Den här månaden</div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3>Mood — last 14 days</h3>
-                    <p class="chart-title">Bar height = mood score (1–10)</p>
+                    <h3>Humör — senaste 14 dagarna</h3>
+                    <p class="chart-title">Stapelns höjd = humörpoäng (1–10)</p>
                     <div id="moodChart" class="mood-chart"></div>
                 </div>
 
                 <div class="card">
-                    <h3>Share with your psychologist</h3>
-                    <p class="subtext">Export a summary of your last 30 days.</p>
-                    <button id="exportBtn" class="btn btn-primary">Generate summary</button>
+                    <h3>Dela med din psykolog</h3>
+                    <p class="subtext">Exportera en sammanfattning av dina senaste 30 dagar.</p>
+                    <button id="exportBtn" class="btn btn-primary">Generera sammanfattning</button>
                     <div id="exportOutput" class="export-output hidden"></div>
                 </div>
             </div>
@@ -145,27 +145,27 @@
             <!-- SCREEN: Settings -->
             <div id="settingsScreen" class="screen hidden">
                 <div class="screen-header">
-                    <button class="back-btn" data-back="home">← Back</button>
-                    <h2>Settings</h2>
+                    <button class="back-btn" data-back="home">← Tillbaka</button>
+                    <h2>Inställningar</h2>
                 </div>
 
                 <div class="card">
-                    <h3>Reminders</h3>
+                    <h3>Påminnelser</h3>
                     <div class="setting-row">
-                        <label>Morning reminder</label>
+                        <label>Morgonpåminnelse</label>
                         <input type="time" id="morningTime" value="08:00">
                     </div>
                     <div class="setting-row">
-                        <label>Evening nudge (if not done)</label>
+                        <label>Kvällspåminnelse (om inte klar)</label>
                         <input type="time" id="eveningTime" value="20:00">
                     </div>
-                    <button id="enableNotificationsBtn" class="btn btn-primary">Enable notifications</button>
+                    <button id="enableNotificationsBtn" class="btn btn-primary">Aktivera notiser</button>
                     <p id="notificationStatus" class="subtext"></p>
                 </div>
 
                 <div class="card">
                     <h3>Data</h3>
-                    <button id="clearDataBtn" class="btn btn-danger">Clear all data</button>
+                    <button id="clearDataBtn" class="btn btn-danger">Rensa all data</button>
                 </div>
             </div>
 

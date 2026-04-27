@@ -4,182 +4,182 @@
 const EXERCISES = [
     {
         id: 'thought-record',
-        title: 'Thought Record',
-        tag: 'CBT',
-        description: 'Catch a negative thought and challenge it with evidence.',
+        title: 'Tankejournalen',
+        tag: 'KBT',
+        description: 'Fånga en negativ tanke och utmana den med bevis.',
         aiFollowUp: true,
         steps: [
             {
-                prompt: 'Describe the situation briefly.',
-                placeholder: 'What happened, or what are you thinking about right now?',
+                prompt: 'Beskriv situationen kort.',
+                placeholder: 'Vad hände, eller vad tänker du på just nu?',
                 field: 'situation'
             },
             {
-                prompt: 'What automatic thought came up?',
-                placeholder: 'The thought that popped into your head...',
+                prompt: 'Vilken automatisk tanke dök upp?',
+                placeholder: 'Tanken som ploppade upp i huvudet...',
                 field: 'thought'
             },
             {
-                prompt: 'What evidence is there AGAINST this thought?',
-                placeholder: 'What facts challenge or contradict this thought?',
+                prompt: 'Vilket bevis finns MOT den här tanken?',
+                placeholder: 'Vilka fakta utmanar eller motsäger tanken?',
                 field: 'counter'
             },
             {
-                prompt: 'Write a more balanced version of the thought.',
-                placeholder: 'A more realistic perspective, even if you can\'t feel it yet...',
+                prompt: 'Skriv en mer balanserad version av tanken.',
+                placeholder: 'Ett mer realistiskt perspektiv, även om du inte kan känna det ännu...',
                 field: 'balanced'
             }
         ]
     },
     {
         id: 'behavioral-activation',
-        title: 'Behavioral Activation',
-        tag: 'CBT',
-        description: 'Notice what you did today. Action comes before feeling — not after.',
+        title: 'Beteendeaktivering',
+        tag: 'KBT',
+        description: 'Notera vad du gjorde idag. Handling kommer före känsla — inte efter.',
         aiFollowUp: true,
         steps: [
             {
-                prompt: 'Name 3 things you did today.',
-                placeholder: 'Even tiny things count. Got dressed. Made coffee. Opened a window.',
+                prompt: 'Nämn 3 saker du gjorde idag.',
+                placeholder: 'Även små saker räknas. Klädde på mig. Tog en kopp kaffe. Öppnade ett fönster.',
                 field: 'activities'
             },
             {
-                prompt: 'Did any of them shift how you felt, even slightly?',
-                placeholder: 'Or did everything feel flat? Both are valid answers.',
+                prompt: 'Förändrade något av dem hur du mådde, ens lite?',
+                placeholder: 'Eller kändes allt platt? Båda är giltiga svar.',
                 field: 'shift'
             },
             {
-                prompt: 'Plan one small action for tomorrow.',
-                placeholder: 'It can be very small — a 5 minute walk, one glass of water, texting someone.',
+                prompt: 'Planera en liten handling till imorgon.',
+                placeholder: 'Det kan vara väldigt litet — en 5-minuters promenad, ett glas vatten, skicka ett meddelande.',
                 field: 'plan'
             }
         ]
     },
     {
         id: 'grounding',
-        title: '5-4-3-2-1 Grounding',
+        title: '5-4-3-2-1 Förankring',
         tag: 'Mindfulness',
-        description: 'Bring yourself back to the present moment using your senses.',
-        info: 'This exercise works even when you feel numb. You don\'t need to feel anything — just notice.\n\n5 things you can SEE\n4 things you can TOUCH\n3 things you can HEAR\n2 things you can SMELL\n1 thing you can TASTE',
+        description: 'Ta dig tillbaka till nuet med hjälp av dina sinnen.',
+        info: 'Den här övningen fungerar även om du känner dig bedövad. Du behöver inte känna något — bara notera.\n\n5 saker du KAN SE\n4 saker du KAN RÖRA VID\n3 saker du KAN HÖRA\n2 saker du KAN LUKTA\n1 sak du KAN SMAKA',
         steps: [
             {
-                prompt: 'Name 5 things you can see right now.',
-                placeholder: 'Look around slowly. List what you see.',
+                prompt: 'Nämn 5 saker du kan se just nu.',
+                placeholder: 'Titta långsamt runt. Lista vad du ser.',
                 field: 'see'
             },
             {
-                prompt: 'Name 4 things you can physically touch or feel.',
-                placeholder: 'Your chair, your feet on the floor, your clothes...',
+                prompt: 'Nämn 4 saker du fysiskt kan röra vid eller känna.',
+                placeholder: 'Din stol, dina fötter på golvet, dina kläder...',
                 field: 'touch'
             },
             {
-                prompt: 'Name 3 things you can hear.',
-                placeholder: 'Background noise, your breathing, anything...',
+                prompt: 'Nämn 3 saker du kan höra.',
+                placeholder: 'Bakgrundsljud, ditt andetag, vad som helst...',
                 field: 'hear'
             },
             {
-                prompt: 'How do you feel compared to when you started?',
-                placeholder: 'Even a tiny shift? Or the same? Either is fine.',
+                prompt: 'Hur mår du jämfört med när du började?',
+                placeholder: 'En liten förändring? Eller samma? Båda är okej.',
                 field: 'after'
             }
         ]
     },
     {
         id: 'values',
-        title: 'Values Check',
+        title: 'Värderingskollen',
         tag: 'ACT',
-        description: 'When feelings go quiet, values can still guide you.',
+        description: 'När känslorna tystnar kan värderingar fortfarande vägleda dig.',
         aiFollowUp: true,
-        info: 'In Acceptance and Commitment Therapy, values are not feelings — they are directions. You can act on a value even when you feel nothing.',
+        info: 'I Acceptance and Commitment Therapy är värderingar inte känslor — de är riktningar. Du kan agera utifrån en värdering även när du inte känner något.',
         steps: [
             {
-                prompt: 'What is one thing that matters to you — even if you can\'t feel it right now?',
-                placeholder: 'Family, learning, honesty, health, creating something...',
+                prompt: 'Vad är en sak som är viktig för dig — även om du inte kan känna det just nu?',
+                placeholder: 'Familj, lärande, ärlighet, hälsa, skapa något...',
                 field: 'value'
             },
             {
-                prompt: 'Did you do anything today that moved toward that value, even slightly?',
-                placeholder: 'Or did today pull you away from it? Both answers are useful.',
+                prompt: 'Gjorde du något idag som rörde dig mot den värderingen, ens lite?',
+                placeholder: 'Eller drog dagen dig bort från den? Båda svaren är användbara.',
                 field: 'action'
             },
             {
-                prompt: 'One small thing you could do tomorrow that aligns with this value.',
-                placeholder: 'It doesn\'t have to feel meaningful — just point in the right direction.',
+                prompt: 'En liten sak du kan göra imorgon som stämmer med den värderingen.',
+                placeholder: 'Det behöver inte kännas meningsfullt — bara peka i rätt riktning.',
                 field: 'tomorrow'
             }
         ]
     },
     {
         id: 'self-compassion',
-        title: 'Self-Compassion',
-        tag: 'CBT',
-        description: 'Treat yourself the way you would treat someone you care about.',
+        title: 'Självmedkänsla',
+        tag: 'KBT',
+        description: 'Behandla dig själv på det sätt du skulle behandla någon du bryr dig om.',
         aiFollowUp: true,
-        info: 'Research shows self-criticism makes depression and emotional blunting worse. Self-compassion is not weakness — it is a clinically validated tool.',
+        info: 'Forskning visar att självkritik förvärrar depression och emotionell avtrubbning. Självmedkänsla är inte svaghet — det är ett kliniskt validerat verktyg.',
         steps: [
             {
-                prompt: 'What is something you\'ve been critical of yourself about lately?',
-                placeholder: 'Something you keep blaming yourself for...',
+                prompt: 'Vad är något du kritiserat dig själv för på sistone?',
+                placeholder: 'Något du ständigt skyller dig själv för...',
                 field: 'criticism'
             },
             {
-                prompt: 'If a close friend told you this about themselves, what would you say to them?',
-                placeholder: 'Write what you would actually say — not what you "should" say.',
+                prompt: 'Om en nära vän berättade detta om sig själv, vad skulle du säga till dem?',
+                placeholder: 'Skriv vad du faktiskt skulle säga — inte vad du "borde" säga.',
                 field: 'friend'
             },
             {
-                prompt: 'Can you say any part of that to yourself? Write it here.',
-                placeholder: 'Even one sentence. It doesn\'t have to feel true yet.',
+                prompt: 'Kan du säga någon del av det till dig själv? Skriv det här.',
+                placeholder: 'Även en mening. Det behöver inte kännas sant ännu.',
                 field: 'self'
             }
         ]
     },
     {
         id: 'opposite-action',
-        title: 'Opposite Action',
+        title: 'Mothandling',
         tag: 'DBT',
-        description: 'When your instinct is to avoid, do something slightly different.',
+        description: 'När din instinkt är att undvika, gör något lite annorlunda.',
         aiFollowUp: true,
-        info: 'From Dialectical Behavior Therapy: when emotions drive avoidance, the avoidance itself keeps the problem alive. Doing even a tiny version of the opposite breaks the cycle — not because it feels good, but because it proves to your brain that you can.',
+        info: 'Från Dialektisk Beteendeterapi: när känslor driver undvikande håller undvikandet problemet vid liv. Att göra ens en liten version av motsatsen bryter cykeln — inte för att det känns bra, utan för att det bevisar för din hjärna att du kan.',
         steps: [
             {
-                prompt: 'What is something you have been avoiding or withdrawing from?',
-                placeholder: 'A person, a task, going outside, something you used to enjoy...',
+                prompt: 'Vad är något du har undvikt eller dragit dig från?',
+                placeholder: 'En person, en uppgift, att gå ut, något du brukade tycka om...',
                 field: 'avoidance'
             },
             {
-                prompt: 'What would the very first 2 minutes of doing that thing look like?',
-                placeholder: 'Not the whole thing — just the opening move. What happens in the first moment? Think about YOUR specific situation, not a general answer.',
+                prompt: 'Hur skulle de allra första 2 minuterna av att göra det se ut?',
+                placeholder: 'Inte hela saken — bara det första steget. Vad händer i det första ögonblicket? Tänk på din specifika situation.',
                 field: 'opposite'
             },
             {
-                prompt: 'What would doing it look like if you only had 10% of your normal energy?',
-                placeholder: 'Strip it down until it feels almost too small to matter. That\'s the version to aim for.',
+                prompt: 'Hur skulle det se ut om du bara hade 10% av din vanliga energi?',
+                placeholder: 'Banta ner det tills det känns nästan för litet för att bry sig om. Det är den versionen att sikta på.',
                 field: 'plan'
             }
         ]
     },
     {
         id: 'activity-planning',
-        title: 'Pleasant Activity Planning',
-        tag: 'Behavioral',
-        description: 'Schedule something small that you once found enjoyable.',
+        title: 'Planera en trevlig aktivitet',
+        tag: 'Beteende',
+        description: 'Planera något litet som du en gång tyckte om.',
         aiFollowUp: true,
-        info: 'With emotional blunting, activities may not feel enjoyable — but doing them anyway is what gradually rebuilds the connection. This is called behavioral re-engagement.',
+        info: 'Vid emotionell avtrubbning kanske aktiviteter inte känns roliga — men att göra dem ändå är det som gradvis återuppbygger kopplingen. Det kallas beteendeåterengagemang.',
         steps: [
             {
-                prompt: 'Name something you used to enjoy before things got hard.',
-                placeholder: 'A walk, music, cooking, reading, talking to someone...',
+                prompt: 'Nämn något du brukade tycka om innan det blev svårt.',
+                placeholder: 'En promenad, musik, matlagning, läsning, att prata med någon...',
                 field: 'activity'
             },
             {
-                prompt: 'On a scale of 0-10, how motivated do you feel to do it right now?',
-                placeholder: 'Be honest. 0 is fine.',
+                prompt: 'På en skala 0-10, hur motiverad känner du dig att göra det just nu?',
+                placeholder: 'Var ärlig. 0 är okej.',
                 field: 'motivation'
             },
             {
-                prompt: 'Schedule a small version of it. When exactly?',
-                placeholder: 'Tomorrow at 3pm. Friday morning. Tonight before bed.',
+                prompt: 'Planera in en liten version av det. När exakt?',
+                placeholder: 'Imorgon kl 15. Fredag morgon. Ikväll innan läggdags.',
                 field: 'schedule'
             }
         ]
@@ -188,50 +188,85 @@ const EXERCISES = [
 
 // ===== MOOD FEEDBACK =====
 const MOOD_FEEDBACK = {
-    1: "That sounds really hard. I\'m glad you\'re here.",
-    2: "That sounds really hard. I\'m glad you\'re here.",
-    3: "Not a good day. That\'s okay. You still showed up.",
-    4: "Rough. Let\'s do something small together.",
-    5: "In the middle. That\'s honest.",
-    6: "A bit better than average. Let\'s build on that.",
-    7: "That\'s a decent day. Let\'s use it.",
-    8: "Pretty good. Let\'s reinforce what\'s working.",
-    9: "Really good. Take note of what\'s different today.",
-    10: "Excellent. Remember this feeling — it exists."
+    1: "Det låter riktigt svårt. Glad att du är här.",
+    2: "Det låter riktigt svårt. Glad att du är här.",
+    3: "Inte en bra dag. Det är okej. Du dök upp ändå.",
+    4: "Tungt. Låt oss göra något litet tillsammans.",
+    5: "Mitt emellan. Det är ärligt.",
+    6: "Lite bättre än vanligt. Låt oss bygga på det.",
+    7: "En hyfsad dag. Låt oss använda den.",
+    8: "Riktigt bra. Förstärk det som fungerar.",
+    9: "Väldigt bra. Lägg märke till vad som är annorlunda idag.",
+    10: "Utmärkt. Kom ihåg den här känslan — den finns."
 };
 
-// ===== MOOD CHECK-IN — ROTATING QUESTIONS & WORD OPTIONS =====
+// ===== MOOD CHECK-IN — ROTATING QUESTIONS & WORD POOLS =====
 // Two-axis approach based on Russell's Circumplex Model:
 // Axis 1: arousal/energy  |  Axis 2: valence/tone
-// Questions rotate by day to prevent autopilot responses.
+// Questions rotate by day. Words are picked daily from a large pool and shuffled
+// on display so the user must actually read and consider each word.
 
 const ENERGY_QUESTIONS = [
-    "What's your energy like right now?",
-    "How does your body feel this morning?",
-    "What's your physical state today?"
+    "Hur är din energi just nu?",
+    "Hur känns kroppen den här morgonen?",
+    "Vilket fysiskt tillstånd är du i idag?"
 ];
 
 const TONE_QUESTIONS = [
-    "How would you describe your mood right now?",
-    "If you had to put a word on it, how are you feeling?",
-    "What's your mood like today?"
+    "Hur skulle du beskriva ditt humör just nu?",
+    "Om du fick sätta ett ord på det — hur mår du?",
+    "Hur är ditt humör idag?"
 ];
 
-const ENERGY_OPTIONS = [
-    { label: "Drained",  score: 1 },
-    { label: "Low",      score: 3 },
-    { label: "Neutral",  score: 5 },
-    { label: "Awake",    score: 7 },
-    { label: "Buzzing",  score: 9 },
+// Large pools — 10 words are picked each day via seeded random, then shuffled for display.
+const ENERGY_POOL = [
+    { label: "Utmattad",   score: 1 },
+    { label: "Tömd",       score: 1 },
+    { label: "Trött",      score: 2 },
+    { label: "Slö",        score: 3 },
+    { label: "Tung",       score: 3 },
+    { label: "Dämpad",     score: 4 },
+    { label: "Dröjande",   score: 4 },
+    { label: "Stilla",     score: 5 },
+    { label: "Neutral",    score: 5 },
+    { label: "Lagom",      score: 5 },
+    { label: "Samlad",     score: 6 },
+    { label: "Stabil",     score: 6 },
+    { label: "Pigg",       score: 7 },
+    { label: "Alert",      score: 7 },
+    { label: "Aktiv",      score: 7 },
+    { label: "Fokuserad",  score: 8 },
+    { label: "Energisk",   score: 8 },
+    { label: "Levande",    score: 8 },
+    { label: "Laddad",     score: 9 },
+    { label: "Sprudlande", score: 9 },
+    { label: "Uppvarvad",  score: 9 },
+    { label: "Rastlös",    score: 8 },
 ];
 
-const TONE_OPTIONS = [
-    { label: "Sad",   score: 1 },
-    { label: "Down",  score: 3 },
-    { label: "Numb",  score: 5 },
-    { label: "Okay",  score: 7 },
-    { label: "Calm",  score: 9 },
-    { label: "Happy", score: 10 },
+const TONE_POOL = [
+    { label: "Nere",          score: 1 },
+    { label: "Ledsen",        score: 2 },
+    { label: "Dyster",        score: 2 },
+    { label: "Håglös",        score: 3 },
+    { label: "Tyngd",         score: 3 },
+    { label: "Likgiltig",     score: 3 },
+    { label: "Tomt",          score: 4 },
+    { label: "Anspänd",       score: 4 },
+    { label: "Osäker",        score: 4 },
+    { label: "Avvaktande",    score: 5 },
+    { label: "Neutral",       score: 5 },
+    { label: "Okej",          score: 6 },
+    { label: "Lugn",          score: 6 },
+    { label: "Hoppfull",      score: 7 },
+    { label: "Lättad",        score: 7 },
+    { label: "Stabil",        score: 7 },
+    { label: "Nöjd",          score: 8 },
+    { label: "Glad",          score: 8 },
+    { label: "Tacksam",       score: 8 },
+    { label: "Positiv",       score: 9 },
+    { label: "Lycklig",       score: 9 },
+    { label: "Upprymd",       score: 9 },
 ];
 
 // ===== COMMITMENT FIELDS =====
@@ -249,24 +284,24 @@ const COMMITMENT_FIELDS = {
 // ===== FOLLOW-UP RESPONSES =====
 const FOLLOWUP_RESPONSES = {
     yes: [
-        "You did it. Acting against low motivation is one of the hardest things there is. Research on behavioral activation shows that following through — even once — starts to rebuild the connection between action and feeling. Your brain is slowly updating what it believes you're capable of.",
-        "Following through when nothing inside you wants to is exactly how change works. The motivation most people wait for? It comes after the action, not before. You proved that today.",
-        "You moved toward something instead of away from it. That matters more than it might feel right now. Behavior change doesn't happen in big moments — it happens in exactly this kind of small follow-through."
+        "Du gjorde det. Att agera trots låg motivation är ett av de svåraste sakerna som finns. Forskning om beteendeaktivering visar att följa upp — även en gång — börjar återbygga kopplingen mellan handling och känsla. Din hjärna uppdaterar långsamt vad den tror att du klarar av.",
+        "Att följa upp när ingenting inuti dig vill det är exakt hur förändring fungerar. Den motivation de flesta väntar på? Den kommer efter handlingen, inte före. Det bevisade du idag.",
+        "Du rörde dig mot något istället för bort från det. Det spelar mer roll än det kanske känns just nu. Beteendeförändring sker inte i stora ögonblick — den sker i precis den här typen av litet genomförande."
     ],
     partly: [
-        "Partly counts. The brain doesn't record 'all or nothing' — it records direction. You moved toward it instead of away from it, and that registers as progress whether it feels that way or not. A smaller version of the thing is still the thing.",
-        "Half a step is still a step forward. In CBT, partial follow-through is treated as success — because starting is the hardest part and you started. Tomorrow the bar can be the same small size.",
-        "Doing part of it is not falling short. It's finding the real size of the step you can take right now. That's useful information, not failure."
+        "Delvis räknas. Hjärnan registrerar inte 'allt eller inget' — den registrerar riktning. Du rörde dig mot det istället för bort från det, och det registreras som framsteg oavsett om det känns så eller inte.",
+        "Halvt steg är ändå ett steg framåt. I KBT behandlas delvis genomförande som framgång — för att börja är det svåraste och du började. Imorgon kan ribban vara lika liten.",
+        "Att göra en del av det är inte att misslyckas. Det är att hitta den verkliga storleken på det steg du kan ta just nu. Det är användbar information, inte ett misslyckande."
     ],
     no: [
-        "Avoidance makes sense when everything feels flat — staying still feels safe. But avoidance has a cost: the more we avoid something, the heavier it gets. The fact that you named it here honestly is already a small act of moving toward it.",
-        "Not doing it doesn't mean failure. It means there was a gap between intention and action. That gap is worth being curious about, not critical of. What made it hard? You don't have to answer that now — just let the question sit.",
-        "The brain under depression and emotional blunting lies. It says 'what's the point' before you even start. You didn't do the thing — but you showed up here and answered honestly. That's not nothing. We'll try again with a smaller step today."
+        "Undvikande är logiskt när allt känns platt — att stå still känns säkert. Men undvikande har ett pris: ju mer vi undviker något, desto tyngre blir det. Det faktum att du namngav det här ärligt är redan en liten handling av att röra sig mot det.",
+        "Att inte göra det är inte ett misslyckande. Det betyder att det var ett gap mellan intention och handling. Det gapet är värt att vara nyfiken på, inte kritisk mot. Vad gjorde det svårt? Du behöver inte svara nu — låt bara frågan stanna kvar.",
+        "Hjärnan under depression och emotionell avtrubbning ljuger. Den säger 'vad är vitsen' innan du ens börjat. Du gjorde inte saken — men du dök upp här och svarade ärligt. Det är inte ingenting. Vi försöker igen med ett mindre steg idag."
     ],
     'not-yet': [
-        "The plan is still on. That's fine — commitments with a future date don't expire overnight. We'll check in again when the time comes.",
-        "Still upcoming. No problem. The intention is set, and that matters. Come back to it when the moment arrives.",
-        "Got it — it's still ahead of you. Hold onto the plan. You've already done the hardest part, which is deciding to do it."
+        "Planen gäller fortfarande. Det är bra — åtaganden med ett framtida datum går inte ut över natten. Vi checkar in igen när stunden kommer.",
+        "Fortfarande kommande. Inga problem. Intentionen är satt, och det spelar roll. Kom tillbaka när stunden är inne.",
+        "Förstått — det ligger fortfarande framför dig. Håll fast vid planen. Du har redan gjort det svåraste, vilket är att bestämma dig för att göra det."
     ]
 };
 
@@ -434,9 +469,42 @@ function getTodayExercise() {
 
 function getGreeting() {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning.';
-    if (hour < 17) return 'Good afternoon.';
-    return 'Good evening.';
+    if (hour < 12) return 'God morgon.';
+    if (hour < 17) return 'God eftermiddag.';
+    return 'God kväll.';
+}
+
+// ===== DAILY WORD SELECTION =====
+
+// Simple seeded LCG random number generator.
+function seededRandom(seed) {
+    let s = seed | 0;
+    return function() {
+        s = (Math.imul(1664525, s) + 1013904223) | 0;
+        return (s >>> 0) / 4294967296;
+    };
+}
+
+// Pick `count` items from pool using a seeded shuffle, then return them.
+// This ensures the same combination appears all day but changes the next day.
+function getDailyWords(pool, seed, count) {
+    const rng = seededRandom(seed);
+    const shuffled = [...pool];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, count);
+}
+
+// Shuffle an array in random display order (unseed, so it changes on reload).
+function shuffleArray(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
 // ===== UI FUNCTIONS =====
@@ -461,10 +529,13 @@ function buildMoodPanels() {
     document.getElementById('toneQuestion').textContent =
         TONE_QUESTIONS[Math.floor(day / ENERGY_QUESTIONS.length) % TONE_QUESTIONS.length];
 
-    // Build energy word buttons
+    // Pick 10 daily words for energy, then shuffle their display order
+    const dailyEnergyWords = getDailyWords(ENERGY_POOL, day * 31337, 10);
+    const displayEnergyWords = shuffleArray(dailyEnergyWords);
+
     const energyContainer = document.getElementById('energyButtons');
     energyContainer.innerHTML = '';
-    ENERGY_OPTIONS.forEach(opt => {
+    displayEnergyWords.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = 'mood-word-btn';
         btn.textContent = opt.label;
@@ -472,10 +543,13 @@ function buildMoodPanels() {
         energyContainer.appendChild(btn);
     });
 
-    // Build tone word buttons
+    // Pick 10 daily words for tone, then shuffle their display order
+    const dailyToneWords = getDailyWords(TONE_POOL, day * 52711 + 1000, 10);
+    const displayToneWords = shuffleArray(dailyToneWords);
+
     const toneContainer = document.getElementById('toneButtons');
     toneContainer.innerHTML = '';
-    TONE_OPTIONS.forEach(opt => {
+    displayToneWords.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = 'mood-word-btn';
         btn.textContent = opt.label;
@@ -542,12 +616,12 @@ function buildExerciseStep() {
 
         const indicator = document.createElement('p');
         indicator.className = 'exercise-step-indicator';
-        indicator.textContent = `Step ${displayStep} of ${totalSteps}`;
+        indicator.textContent = `Steg ${displayStep} av ${totalSteps}`;
         content.appendChild(indicator);
 
         const aiLabel = document.createElement('span');
         aiLabel.className = 'ai-step-label';
-        aiLabel.textContent = '✦ Follow-up';
+        aiLabel.textContent = '✦ Uppföljning';
         content.appendChild(aiLabel);
 
         const prompt = document.createElement('p');
@@ -557,12 +631,12 @@ function buildExerciseStep() {
 
         const textarea = document.createElement('textarea');
         textarea.className = 'exercise-textarea';
-        textarea.placeholder = 'Take your time...';
+        textarea.placeholder = 'Ta din tid...';
         textarea.id = 'exerciseInput';
         content.appendChild(textarea);
 
         const isLast = aiQuestionIndex === aiQuestions.length - 1;
-        nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
+        nextBtn.textContent = isLast ? 'Klar ✓' : 'Nästa →';
         return;
     }
 
@@ -582,7 +656,7 @@ function buildExerciseStep() {
 
     const indicator = document.createElement('p');
     indicator.className = 'exercise-step-indicator';
-    indicator.textContent = `Step ${currentStepIndex + 1} of ${totalSteps}`;
+    indicator.textContent = `Steg ${currentStepIndex + 1} av ${totalSteps}`;
     content.appendChild(indicator);
 
     const prompt = document.createElement('p');
@@ -598,7 +672,7 @@ function buildExerciseStep() {
     content.appendChild(textarea);
 
     const isLast = !hasAI && currentStepIndex === exercise.steps.length - 1;
-    nextBtn.textContent = isLast ? 'Complete ✓' : 'Next →';
+    nextBtn.textContent = isLast ? 'Klar ✓' : 'Nästa →';
 }
 
 function advanceExerciseStep() {
@@ -669,7 +743,7 @@ async function fetchAIFollowUp(firstAnswer) {
         if (!response.ok) throw new Error('API error');
 
         const data = await response.json();
-        aiQuestions = Array.isArray(data.questions) ? data.questions : [data.questions || 'How does that feel?'];
+        aiQuestions = Array.isArray(data.questions) ? data.questions : [data.questions || 'Hur känns det?'];
         aiQuestionIndex = 0;
         usingAIFlow = true;
     } catch (err) {
@@ -690,10 +764,10 @@ function showCompletion(entry) {
     document.getElementById('completionStep').classList.remove('hidden');
 
     const streak = getStreak();
-    let message = 'You showed up today. That matters.';
-    if (streak >= 7) message = `${streak} days in a row. Keep going.`;
-    else if (streak >= 3) message = `${streak} days in a row. You\'re building something real.`;
-    else if (streak >= 2) message = `2 days in a row. That\'s a start.`;
+    let message = 'Du dök upp idag. Det spelar roll.';
+    if (streak >= 7) message = `${streak} dagar i rad. Fortsätt.`;
+    else if (streak >= 3) message = `${streak} dagar i rad. Du bygger något på riktigt.`;
+    else if (streak >= 2) message = `2 dagar i rad. Det är en start.`;
 
     document.getElementById('completionMessage').textContent = message;
     updateStreakBadge();
@@ -770,7 +844,6 @@ function buildMoodChart() {
         d.setDate(d.getDate() - i);
         const label = document.createElement('span');
         label.className = 'chart-day';
-        // Show "Mon 14" style label
         label.textContent = d.toLocaleDateString('sv-SE', { weekday: 'short' }).slice(0,2) + ' ' + d.getDate();
 
         wrap.appendChild(label);
@@ -778,7 +851,7 @@ function buildMoodChart() {
     }
 
     if (!hasData) {
-        chart.innerHTML = '<p class="chart-empty">No data yet. Start checking in daily.</p>';
+        chart.innerHTML = '<p class="chart-empty">Ingen data ännu. Börja checka in dagligen.</p>';
     }
 }
 
@@ -789,7 +862,7 @@ function generateExportSummary() {
     const recent = data.entries.filter(e => e.date >= thirtyDaysAgo).sort((a, b) => a.date.localeCompare(b.date));
 
     if (recent.length === 0) {
-        return 'No check-ins in the last 30 days.';
+        return 'Inga check-ins de senaste 30 dagarna.';
     }
 
     const avgMood = (recent.reduce((sum, e) => sum + e.mood, 0) / recent.length).toFixed(1);
@@ -802,21 +875,21 @@ function generateExportSummary() {
         exerciseCounts[e.exercise] = (exerciseCounts[e.exercise] || 0) + 1;
     });
 
-    let summary = `DAILY CHECK-IN SUMMARY\n`;
-    summary += `Generated: ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
-    summary += `Period: Last 30 days\n\n`;
-    summary += `--- OVERVIEW ---\n`;
-    summary += `Total check-ins: ${recent.length} / 30 days\n`;
-    summary += `Average mood: ${avgMood} / 10\n`;
-    summary += `Good days (7+): ${highDays}\n`;
-    summary += `Difficult days (1-3): ${lowDays}\n`;
-    summary += `Current streak: ${streak} days\n\n`;
-    summary += `--- MOOD BY DAY ---\n`;
+    let summary = `DAGLIG CHECK-IN SAMMANFATTNING\n`;
+    summary += `Genererad: ${now.toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
+    summary += `Period: Senaste 30 dagarna\n\n`;
+    summary += `--- ÖVERSIKT ---\n`;
+    summary += `Totalt antal check-ins: ${recent.length} / 30 dagar\n`;
+    summary += `Genomsnittshumör: ${avgMood} / 10\n`;
+    summary += `Bra dagar (7+): ${highDays}\n`;
+    summary += `Svåra dagar (1-3): ${lowDays}\n`;
+    summary += `Nuvarande streak: ${streak} dagar\n\n`;
+    summary += `--- HUMÖR PER DAG ---\n`;
     recent.forEach(e => {
         const bar = '█'.repeat(e.mood) + '░'.repeat(10 - e.mood);
         summary += `${e.date}  ${bar}  ${e.mood}/10\n`;
     });
-    summary += `\n--- EXERCISES COMPLETED ---\n`;
+    summary += `\n--- GENOMFÖRDA ÖVNINGAR ---\n`;
     Object.entries(exerciseCounts).forEach(([id, count]) => {
         const ex = EXERCISES.find(e => e.id === id);
         summary += `${ex ? ex.title : id}: ${count}x\n`;
@@ -827,9 +900,9 @@ function generateExportSummary() {
         const yes = followUps.filter(e => e.followUp === 'yes').length;
         const partly = followUps.filter(e => e.followUp === 'partly').length;
         const no = followUps.filter(e => e.followUp === 'no').length;
-        summary += `\n--- FOLLOW-THROUGH ---\n`;
-        summary += `Did the planned action: ${yes}x yes, ${partly}x partly, ${no}x no\n`;
-        summary += `Follow-through rate: ${Math.round(((yes + partly * 0.5) / followUps.length) * 100)}%\n`;
+        summary += `\n--- UPPFÖLJNING ---\n`;
+        summary += `Genomförde planerad handling: ${yes}x ja, ${partly}x delvis, ${no}x nej\n`;
+        summary += `Genomförandegrad: ${Math.round(((yes + partly * 0.5) / followUps.length) * 100)}%\n`;
     }
 
     return summary;
@@ -839,7 +912,7 @@ function generateExportSummary() {
 
 async function requestNotifications() {
     if (!('Notification' in window)) {
-        document.getElementById('notificationStatus').textContent = 'Your browser does not support notifications.';
+        document.getElementById('notificationStatus').textContent = 'Din webbläsare stöder inte notiser.';
         return;
     }
 
@@ -849,10 +922,10 @@ async function requestNotifications() {
     saveSettings(settings);
 
     if (permission === 'granted') {
-        document.getElementById('notificationStatus').textContent = 'Notifications enabled. You\'ll be reminded daily.';
+        document.getElementById('notificationStatus').textContent = 'Notiser aktiverade. Du påminns dagligen.';
         scheduleNotificationCheck();
     } else {
-        document.getElementById('notificationStatus').textContent = 'Permission denied. You can enable it in your browser settings.';
+        document.getElementById('notificationStatus').textContent = 'Åtkomst nekad. Du kan aktivera det i dina webbläsarinställningar.';
     }
 }
 
@@ -877,8 +950,8 @@ function scheduleNotificationCheck() {
         const msUntilMorning = morningTime - now;
         setTimeout(() => {
             if (!getTodayEntry()) {
-                new Notification('Daily Check-in', {
-                    body: 'Good morning. Time for your daily 3-minute check-in.',
+                new Notification('Daglig Check-in', {
+                    body: 'God morgon. Dags för din dagliga 3-minuters check-in.',
                     icon: '/icon.png'
                 });
             }
@@ -890,8 +963,8 @@ function scheduleNotificationCheck() {
         const msUntilEvening = eveningTime - now;
         setTimeout(() => {
             if (!getTodayEntry()) {
-                new Notification('Daily Check-in', {
-                    body: 'You haven\'t checked in today yet. It only takes 3 minutes.',
+                new Notification('Daglig Check-in', {
+                    body: 'Du har inte checkat in idag ännu. Det tar bara 3 minuter.',
                     icon: '/icon.png'
                 });
             }
@@ -928,7 +1001,7 @@ function init() {
     document.getElementById('eveningTime').value = settings.eveningTime;
 
     if (settings.notificationsEnabled && Notification.permission === 'granted') {
-        document.getElementById('notificationStatus').textContent = 'Notifications are enabled.';
+        document.getElementById('notificationStatus').textContent = 'Notiser är aktiverade.';
         scheduleNotificationCheck();
     }
 
@@ -1043,11 +1116,11 @@ function init() {
             const copyBtn = document.createElement('button');
             copyBtn.id = 'copyBtn';
             copyBtn.className = 'btn btn-secondary copy-btn';
-            copyBtn.textContent = 'Copy to clipboard';
+            copyBtn.textContent = 'Kopiera till urklipp';
             copyBtn.addEventListener('click', () => {
                 navigator.clipboard.writeText(summary).then(() => {
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => { copyBtn.textContent = 'Copy to clipboard'; }, 2000);
+                    copyBtn.textContent = 'Kopierat!';
+                    setTimeout(() => { copyBtn.textContent = 'Kopiera till urklipp'; }, 2000);
                 });
             });
             output.after(copyBtn);
@@ -1056,7 +1129,7 @@ function init() {
 
     // Clear data
     document.getElementById('clearDataBtn').addEventListener('click', () => {
-        if (confirm('Are you sure? This will delete all your check-in history.')) {
+        if (confirm('Är du säker? Det här tar bort all din check-in historik.')) {
             localStorage.removeItem(STORAGE_KEY);
             location.reload();
         }
@@ -1066,8 +1139,8 @@ function init() {
 function showAlreadyDone(entry) {
     showScreen('alreadyDoneScreen');
     const hour = new Date().getHours();
-    let msg = 'Come back tomorrow.';
-    if (hour < 17) msg = 'Rest of the day is yours.';
+    let msg = 'Kom tillbaka imorgon.';
+    if (hour < 17) msg = 'Resten av dagen är din.';
     document.getElementById('alreadyDoneMessage').textContent = msg;
     const energyLabel = entry.energyLabel || '—';
     const toneLabel   = entry.toneLabel   || '—';
